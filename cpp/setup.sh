@@ -415,12 +415,6 @@ if [ -d "$REPO_MP3_DIR" ]; then
         echo -e "${YELLOW}ℹ  No MP3 files found in repository${NC}"
     fi
 
-    # Copy test script if it exists
-    if [ -f "$REPO_MP3_DIR/test-tone.sh" ]; then
-        cp -f "$REPO_MP3_DIR/test-tone.sh" "$MP3_DIR/"
-        chmod +x "$MP3_DIR/test-tone.sh"
-        chown $INSTALL_USER:$INSTALL_USER "$MP3_DIR/test-tone.sh"
-    fi
 fi
 
 echo -e "${GREEN}✓ MP3 directory created at: ${CYAN}$MP3_DIR${NC}"

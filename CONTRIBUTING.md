@@ -5,7 +5,6 @@ Thank you for your interest in contributing! This document provides guidelines a
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18.x or 20.x
 - Git
 - A code editor (VS Code, Cursor, etc.)
 
@@ -15,16 +14,6 @@ Thank you for your interest in contributing! This document provides guidelines a
    ```bash
    git clone https://github.com/parkredding/poor-house-dub-v2.git
    cd poor-house-dub-v2
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Run tests to verify setup**
-   ```bash
-   npm test
    ```
 
 ## Development Workflow
@@ -39,9 +28,6 @@ git checkout -b feature/your-feature-name
 
 # For bug fixes
 git checkout -b fix/bug-description
-
-# For tests
-git checkout -b test/what-youre-testing
 ```
 
 ### 2. Make Changes
@@ -53,49 +39,11 @@ git checkout -b test/what-youre-testing
 
 ### 3. Test Your Changes
 
-#### Run all tests
-```bash
-npm test
-```
+- Open `index.html` in a browser and verify the synth works correctly
+- Test on Raspberry Pi hardware if possible
+- Check the browser console for errors
 
-#### Run tests in watch mode (during development)
-```bash
-npm run test:watch
-```
-
-#### Check coverage
-```bash
-npm run test:coverage
-```
-
-**All tests must pass before submitting a PR.**
-
-### 4. Write Tests
-
-If you're adding new features or fixing bugs:
-
-1. **Add tests** in `tests/dubsiren.test.js` or `tests/integration.test.js`
-2. **Ensure tests fail** before your fix (TDD approach)
-3. **Implement your changes**
-4. **Verify tests pass**
-
-Example test structure:
-```javascript
-describe('Your Feature', () => {
-  test('should do something specific', () => {
-    // Arrange
-    synth.setParam('parameter', value);
-    
-    // Act
-    synth.trigger();
-    
-    // Assert
-    expect(synth.someProperty).toBe(expectedValue);
-  });
-});
-```
-
-### 5. Commit Your Changes
+### 4. Commit Your Changes
 
 Use clear, descriptive commit messages:
 
@@ -118,7 +66,7 @@ git commit -m "Add feature: description of what you did
 - ❌ "update"
 - ❌ "wip"
 
-### 6. Push and Create PR
+### 5. Push and Create PR
 
 ```bash
 git push -u origin your-branch-name
@@ -127,7 +75,6 @@ git push -u origin your-branch-name
 Then create a Pull Request on GitHub with:
 - **Clear title** describing the change
 - **Description** explaining what and why
-- **Test results** showing all tests pass
 - **Screenshots** if UI changes are involved
 
 ## Pull Request Guidelines
@@ -135,7 +82,6 @@ Then create a Pull Request on GitHub with:
 ### PR Title Format
 - `feat: Add new feature description`
 - `fix: Fix bug description`
-- `test: Add tests for feature`
 - `docs: Update documentation`
 - `refactor: Refactor component name`
 
@@ -148,15 +94,13 @@ Brief description of changes
 Explain the problem or motivation
 
 ## How was it tested?
-- [ ] All existing tests pass
-- [ ] New tests added and passing
 - [ ] Manually tested in browser
+- [ ] Tested on Raspberry Pi hardware
 
 ## Screenshots (if applicable)
 Add screenshots or recordings
 
 ## Checklist
-- [ ] Tests pass (`npm test`)
 - [ ] Code follows project style
 - [ ] Documentation updated
 - [ ] No console errors
@@ -164,16 +108,11 @@ Add screenshots or recordings
 
 ### PR Review Process
 
-1. **Automated checks** run via GitHub Actions
-   - All tests must pass
-   - Coverage report generated
-   
-2. **Code review** by maintainer
+1. **Code review** by maintainer
    - Code quality check
    - Architecture review
-   - Test coverage check
 
-3. **Approval and merge**
+2. **Approval and merge**
    - Squash and merge preferred
    - Delete branch after merge
 
@@ -191,17 +130,10 @@ Add screenshots or recordings
 - Clamp values to prevent blow-ups
 - Document signal routing in comments
 
-### Testing
-- One test per behavior
-- Clear test descriptions
-- Use `describe` blocks for organization
-- Clean up after each test (use `afterEach`)
-
 ## Areas for Contribution
 
 ### High Priority
 - 🐛 **Bug fixes** - Check GitHub Issues
-- 🧪 **More tests** - Increase coverage
 - 📚 **Documentation** - Improve clarity
 - ♿ **Accessibility** - ARIA labels, keyboard nav
 
@@ -216,27 +148,6 @@ Add screenshots or recordings
 - 🌐 **i18n** - Internationalization
 - 🔌 **MIDI support** - MIDI input
 - 📊 **Analytics** - Usage tracking
-
-## Testing Guidelines
-
-### What to Test
-✅ **Do test:**
-- All new features
-- Bug fixes (write test first)
-- Edge cases and error conditions
-- Integration between components
-- Parameter validation
-
-❌ **Don't test:**
-- Third-party libraries
-- Browser APIs directly
-- Obvious getters/setters
-
-### Test Coverage Goals
-- **Statements**: > 80%
-- **Branches**: > 75%
-- **Functions**: > 85%
-- **Lines**: > 80%
 
 ## Getting Help
 

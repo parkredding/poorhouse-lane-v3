@@ -135,14 +135,7 @@ If all wiring looks correct:
 
 ## Step 7: Verify I2S is Enabled
 
-Run the audio diagnostics script:
-
-```bash
-cd ~/poor-house-dub-v2
-./audio_diagnostics.sh
-```
-
-Check that the output shows:
+Verify that I2S is correctly configured. Check that your `/boot/config.txt` contains:
 ```
 dtparam=i2s=on
 dtoverlay=hifiberry-dac
@@ -220,18 +213,15 @@ Follow this order to isolate the problem:
 
 - **Full hardware guide:** [HARDWARE.md](HARDWARE.md)
 - **GPIO wiring:** [GPIO_WIRING_GUIDE.md](GPIO_WIRING_GUIDE.md)
-- **Audio diagnostics script:** `./audio_diagnostics.sh`
 
 ## Still Not Working?
 
 If you've verified all of the above and still have no audio:
 
 1. Take photos of your wiring
-2. Run the diagnostic script: `./audio_diagnostics.sh > diagnostics.txt`
-3. Open an issue at: https://github.com/parkredding/poor-house-dub-v2/issues
+2. Open an issue at: https://github.com/parkredding/poor-house-dub-v2/issues
 
 Include:
 - Photos of PCM5102 wiring
-- Output of diagnostic script
 - PCM5102 module model/brand
 - Any error messages
