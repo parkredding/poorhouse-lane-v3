@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Poor House Dub v2 - Browser Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 10px;
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.5em;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .start-overlay.hidden {
+            display: none;
+        }
+
+        .start-btn {
+            font-size: 2em;
+            padding: 30px 60px;
+            background: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 20px;
+            color: #000000;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+            background: #cccccc;
+        }
+
+        .start-overlay p {
+            margin-top: 20px;
+            color: #999;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .triggers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .trigger-btn {
+            padding: 30px 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .trigger-btn:active, .trigger-btn.active {
+            transform: scale(0.95);
+        }
+
+        .pitch-envelope-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #333333;
+        }
+
+        .pitch-envelope-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.75em;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pitch-envelope-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pitch-env-btn {
+            padding: 10px 12px;
+            font-size: 0.7em;
+            background: #000000;
+            border: 2px solid #444444;
+            border-radius: 8px;
+            color: #888888;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .pitch-env-btn.active {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+        }
+
+        .siren {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+        }
+
+        .siren:active, .siren.active {
+            background: #cccccc;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.7);
+        }
+
+        .section {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333333;
+        }
+
+        .section h2 {
+            margin: 0 0 15px 0;
+            font-size: 1em;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .control {
+            margin-bottom: 15px;
+        }
+
+        .control label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+            color: #999999;
+        }
+
+        .control label span {
+            float: right;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 40px;
+            -webkit-appearance: none;
+            background: transparent;
+            margin: 0;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            background: #333333;
+            border-radius: 4px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 30px;
+            height: 30px;
+            background: #ffffff;
+            border-radius: 50%;
+            margin-top: -11px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .waveform-select {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .waveform-btn {
+            padding: 12px 5px;
+            font-size: 0.75em;
+            background: #000000;
+            border: 2px solid #444444;
+            border-radius: 8px;
+            color: #888888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .waveform-btn.active {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+        }
+
+        .visualizer {
+            width: 100%;
+            height: 80px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #333333;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            font-size: 0.8em;
+            color: #666666;
+        }
+
+        .status.active {
+            color: #ffffff;
+        }
+
+        /* Frequency control for manual testing */
+        .freq-control {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="start-overlay" id="startOverlay">
+        <button class="start-btn" id="startBtn">TAP TO START</button>
+        <p>iOS requires user interaction to enable audio.<br>Tap the button above to initialize the synthesizer.</p>
+    </div>
+
+    <h1>Poor House Dub v2</h1>
+
+    <canvas class="visualizer" id="visualizer"></canvas>
+
+    <div class="triggers">
+        <div class="pitch-envelope-section">
+            <h3>Pitch Envelope</h3>
+            <div class="pitch-envelope-options" id="pitchEnvelope">
+                <button class="pitch-env-btn active" data-env="none">Off</button>
+                <button class="pitch-env-btn" data-env="up">Up</button>
+                <button class="pitch-env-btn" data-env="down">Down</button>
+            </div>
+        </div>
+        <button class="trigger-btn siren" id="sirenBtn">TRIGGER</button>
+    </div>
+
+    <div class="section">
+        <h2>Oscillator</h2>
+        <div class="control">
+            <label>Waveform</label>
+            <div class="waveform-select" id="oscWaveform">
+                <button class="waveform-btn active" data-wave="sine">Sine</button>
+                <button class="waveform-btn" data-wave="square">Square</button>
+                <button class="waveform-btn" data-wave="sawtooth">Saw</button>
+                <button class="waveform-btn" data-wave="triangle">Tri</button>
+            </div>
+        </div>
+        <div class="control freq-control">
+            <label>Manual Frequency <span id="freqValue">440</span> Hz</label>
+            <input type="range" id="frequency" min="50" max="2000" value="440" step="1">
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>LFO Modulation</h2>
+        <div class="control-row">
+            <div class="control">
+                <label>Rate <span id="lfoRateValue">5.0</span> Hz</label>
+                <input type="range" id="lfoRate" min="0.1" max="20" value="5" step="0.1">
+            </div>
+            <div class="control">
+                <label>Depth <span id="lfoDepthValue">0</span>%</label>
+                <input type="range" id="lfoDepth" min="0" max="100" value="0" step="1">
+            </div>
+        </div>
+        <div class="control">
+            <label>LFO Waveform</label>
+            <div class="waveform-select" id="lfoWaveform">
+                <button class="waveform-btn active" data-wave="sine">Sine</button>
+                <button class="waveform-btn" data-wave="square">Square</button>
+                <button class="waveform-btn" data-wave="sawtooth">Saw</button>
+                <button class="waveform-btn" data-wave="triangle">Tri</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Envelope</h2>
+        <div class="control-row">
+            <div class="control">
+                <label>Attack <span id="attackValue">0.01</span>s</label>
+                <input type="range" id="attack" min="0.001" max="1" value="0.01" step="0.001">
+            </div>
+            <div class="control">
+                <label>Release <span id="releaseValue">0.3</span>s</label>
+                <input type="range" id="release" min="0.01" max="3" value="0.3" step="0.01">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Filter</h2>
+        <div class="control-row">
+            <div class="control">
+                <label>Cutoff <span id="filterFreqValue">2000</span> Hz</label>
+                <input type="range" id="filterFreq" min="100" max="15000" value="2000" step="10">
+            </div>
+            <div class="control">
+                <label>Resonance <span id="filterResValue">1</span></label>
+                <input type="range" id="filterRes" min="0.1" max="20" value="1" step="0.1">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Delay (Tape Style)</h2>
+        <div class="control-row">
+            <div class="control">
+                <label>Time <span id="delayTimeValue">0.3</span>s</label>
+                <input type="range" id="delayTime" min="0.05" max="1" value="0.3" step="0.01">
+            </div>
+            <div class="control">
+                <label>Feedback <span id="delayFeedbackValue">30</span>%</label>
+                <input type="range" id="delayFeedback" min="0" max="90" value="30" step="1">
+            </div>
+        </div>
+        <div class="control-row">
+            <div class="control">
+                <label>Mix <span id="delayMixValue">0</span>%</label>
+                <input type="range" id="delayMix" min="0" max="100" value="0" step="1">
+            </div>
+            <div class="control">
+                <label>Tape Saturation <span id="tapeSaturationValue">30</span>%</label>
+                <input type="range" id="tapeSaturation" min="0" max="100" value="30" step="1">
+            </div>
+        </div>
+        <div class="control-row">
+            <div class="control">
+                <label>Wobble <span id="wobbleDepthValue">3.0</span>ms</label>
+                <input type="range" id="wobbleDepth" min="0" max="100" value="30" step="1">
+            </div>
+            <div class="control">
+                <label>Flutter <span id="flutterDepthValue">1.0</span>ms</label>
+                <input type="range" id="flutterDepth" min="0" max="100" value="10" step="1">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Reverb</h2>
+        <div class="control-row">
+            <div class="control">
+                <label>Size <span id="reverbSizeValue">0.5</span></label>
+                <input type="range" id="reverbSize" min="0.1" max="1" value="0.5" step="0.01">
+            </div>
+            <div class="control">
+                <label>Mix <span id="reverbMixValue">0</span>%</label>
+                <input type="range" id="reverbMix" min="0" max="100" value="0" step="1">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Master</h2>
+        <div class="control">
+            <label>Volume <span id="volumeValue">70</span>%</label>
+            <input type="range" id="volume" min="0" max="100" value="70" step="1">
+        </div>
+    </div>
+
+    <div class="status" id="status">Tap "TAP TO START" to initialize audio</div>
+
+    <script>
+        // Dub Siren Synthesizer - Web Audio Implementation
+        class DubSiren {
+            constructor() {
+                this.audioContext = null;
+                this.isPlaying = false;
+                this.currentNote = null;
+
+                // Parameters
+                this.params = {
+                    oscWaveform: 'sine',
+                    frequency: 440,
+                    pitchEnvelope: 'none', // 'none', 'up', 'down'
+                    lfoRate: 5,
+                    lfoDepth: 0,
+                    lfoWaveform: 'sine',
+                    attack: 0.01,
+                    release: 0.3,
+                    filterFreq: 2000,
+                    filterRes: 1,
+                    delayTime: 0.3,
+                    delayFeedback: 0.3,
+                    delayMix: 0,
+                    tapeSaturation: 0.3,      // 0.0-1.0 tape saturation amount
+                    wobbleDepth: 0.003,       // wobble depth in seconds (0.003 = 0.3%)
+                    wobbleRate: 0.5,          // wobble rate in Hz
+                    flutterDepth: 0.001,      // flutter depth in seconds (0.001 = 0.1%)
+                    flutterRate: 3.5,         // flutter rate in Hz
+                    reverbSize: 0.5,
+                    reverbMix: 0,
+                    volume: 0.7
+                };
+
+                // Nodes
+                this.oscillator = null;
+                this.lfo = null;
+                this.lfoGain = null;
+                this.envelope = null;
+                this.filter = null;
+                this.delay = null;
+                this.delayFeedbackGain = null;
+                this.delayDry = null;
+                this.delayWet = null;
+                this.tapeSaturator = null;     // WaveShaper for tape saturation
+                this.wobbleLfo = null;          // LFO for tape wobble
+                this.wobbleGain = null;         // Gain for wobble modulation depth
+                this.flutterLfo = null;         // LFO for tape flutter
+                this.flutterGain = null;        // Gain for flutter modulation depth
+                this.convolver = null;
+                this.reverbDry = null;
+                this.reverbWet = null;
+                this.masterGain = null;
+                this.analyser = null;
+
+                // Temporary nodes created during trigger (need cleanup)
+                this.delayMerge = null;
+                this.reverbMerge = null;
+
+                // Pitch envelope tracking for real-time frequency updates
+                this.releaseStartTime = null;
+                this.pitchEnvelopeUpdateInterval = null;
+            }
+
+            async init() {
+                // Create audio context
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Resume if suspended (iOS requirement)
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+
+                // Create master output chain
+                this.masterGain = this.audioContext.createGain();
+                this.masterGain.gain.value = this.params.volume;
+
+                // Create analyser for visualization
+                this.analyser = this.audioContext.createAnalyser();
+                this.analyser.fftSize = 2048;
+
+                // Create filter
+                this.filter = this.audioContext.createBiquadFilter();
+                this.filter.type = 'lowpass';
+                this.filter.frequency.value = this.params.filterFreq;
+                this.filter.Q.value = this.params.filterRes;
+
+                // Create delay
+                this.delay = this.audioContext.createDelay(2.0);
+                this.delay.delayTime.value = this.params.delayTime;
+
+                this.delayFeedbackGain = this.audioContext.createGain();
+                this.delayFeedbackGain.gain.value = this.params.delayFeedback;
+
+                // Delay feedback loop with tape-style processing
+                // 1. LP filter for high-frequency damping (5kHz)
+                this.delayFilter = this.audioContext.createBiquadFilter();
+                this.delayFilter.type = 'lowpass';
+                this.delayFilter.frequency.value = 5000;
+
+                // 2. Tape saturation waveshaper
+                this.tapeSaturator = this.audioContext.createWaveShaper();
+                this.tapeSaturator.curve = this.createTapeSaturationCurve(this.params.tapeSaturation);
+                this.tapeSaturator.oversample = '2x';
+
+                // 3. Connect feedback path: delay -> filter -> saturator -> feedback gain -> delay
+                this.delay.connect(this.delayFilter);
+                this.delayFilter.connect(this.tapeSaturator);
+                this.tapeSaturator.connect(this.delayFeedbackGain);
+                this.delayFeedbackGain.connect(this.delay);
+
+                // Delay mix
+                this.delayDry = this.audioContext.createGain();
+                this.delayWet = this.audioContext.createGain();
+                this.delayDry.gain.value = 1;
+                this.delayWet.gain.value = this.params.delayMix;
+
+                // Tape wobble modulation (slow, 0.5Hz)
+                this.wobbleLfo = this.audioContext.createOscillator();
+                this.wobbleLfo.type = 'sine';
+                this.wobbleLfo.frequency.value = this.params.wobbleRate;
+
+                this.wobbleGain = this.audioContext.createGain();
+                this.wobbleGain.gain.value = this.params.wobbleDepth;
+
+                this.wobbleLfo.connect(this.wobbleGain);
+                this.wobbleGain.connect(this.delay.delayTime);
+
+                // Tape flutter modulation (fast, 3.5Hz)
+                this.flutterLfo = this.audioContext.createOscillator();
+                this.flutterLfo.type = 'sine';
+                this.flutterLfo.frequency.value = this.params.flutterRate;
+
+                this.flutterGain = this.audioContext.createGain();
+                this.flutterGain.gain.value = this.params.flutterDepth;
+
+                this.flutterLfo.connect(this.flutterGain);
+                this.flutterGain.connect(this.delay.delayTime);
+
+                // Start the tape modulation LFOs
+                this.wobbleLfo.start();
+                this.flutterLfo.start();
+
+                // Create reverb using convolver
+                this.convolver = this.audioContext.createConvolver();
+                await this.createReverbIR();
+
+                // Reverb mix
+                this.reverbDry = this.audioContext.createGain();
+                this.reverbWet = this.audioContext.createGain();
+                this.reverbDry.gain.value = 1;
+                this.reverbWet.gain.value = this.params.reverbMix;
+
+                // DC blocker - removes DC offset to prevent headroom waste
+                this.dcBlocker = this.audioContext.createBiquadFilter();
+                this.dcBlocker.type = 'highpass';
+                this.dcBlocker.frequency.value = 10; // 10Hz high-pass
+                this.dcBlocker.Q.value = 0.7071; // Butterworth response
+
+                // Connect reverb chain
+                // Input splits to dry and convolver
+                // Both merge before master
+
+                // Output chain: master -> DC blocker -> analyser -> destination
+                this.masterGain.connect(this.dcBlocker);
+                this.dcBlocker.connect(this.analyser);
+                this.analyser.connect(this.audioContext.destination);
+
+                return true;
+            }
+
+            async createReverbIR() {
+                // Create impulse response for reverb
+                const sampleRate = this.audioContext.sampleRate;
+                const length = sampleRate * this.params.reverbSize * 3; // Up to 3 seconds
+                const impulse = this.audioContext.createBuffer(2, length, sampleRate);
+
+                for (let channel = 0; channel < 2; channel++) {
+                    const channelData = impulse.getChannelData(channel);
+                    for (let i = 0; i < length; i++) {
+                        // Exponential decay with some diffusion
+                        const decay = Math.exp(-3 * i / length);
+                        channelData[i] = (Math.random() * 2 - 1) * decay;
+                    }
+                }
+
+                this.convolver.buffer = impulse;
+            }
+
+            createTapeSaturationCurve(amount) {
+                // Create a waveshaper curve for tape saturation
+                // amount: 0.0 = clean, 1.0 = heavy saturation
+                const samples = 1024;
+                const curve = new Float32Array(samples);
+
+                for (let i = 0; i < samples; i++) {
+                    const x = (i * 2) / samples - 1; // -1 to 1
+
+                    // Blend between clean and tanh saturation
+                    const drive = 1.0 + amount * 2.0;
+                    const saturated = Math.tanh(x * drive);
+                    curve[i] = x * (1.0 - amount) + saturated * amount;
+                }
+
+                return curve;
+            }
+
+            trigger() {
+                if (!this.audioContext) return;
+
+                // Stop any existing note
+                this.release();
+
+                const now = this.audioContext.currentTime;
+                const frequency = this.params.frequency;
+
+                // Create oscillator
+                this.oscillator = this.audioContext.createOscillator();
+                this.oscillator.type = this.params.oscWaveform;
+                this.oscillator.frequency.value = frequency;
+
+                // Create LFO for frequency modulation
+                this.lfo = this.audioContext.createOscillator();
+                this.lfo.type = this.params.lfoWaveform;
+                this.lfo.frequency.value = this.params.lfoRate;
+
+                this.lfoGain = this.audioContext.createGain();
+                // LFO depth as percentage of base frequency
+                this.lfoGain.gain.value = frequency * (this.params.lfoDepth / 100);
+
+                this.lfo.connect(this.lfoGain);
+                this.lfoGain.connect(this.oscillator.frequency);
+
+                // Create envelope for dry signal only (not for delay/reverb sends)
+                this.envelope = this.audioContext.createGain();
+                this.envelope.gain.value = 0;
+                this.envelope.gain.setValueAtTime(0, now);
+                this.envelope.gain.linearRampToValueAtTime(1, now + this.params.attack);
+
+                // Connect signal chain:
+                // Oscillator -> Filter -> [split into dry and wet paths]
+                // - Dry path: Filter -> Envelope -> DelayDry (enveloped)
+                // - Wet path: Filter -> Delay/Reverb (NOT enveloped, continues at full volume until osc stops)
+                this.oscillator.connect(this.filter);
+                
+                // Dry path: envelope controls dry signal level
+                this.filter.connect(this.envelope);
+                this.envelope.connect(this.delayDry);
+                
+                // Wet path: delay gets full volume signal (not affected by envelope)
+                // This allows delay to continue receiving input during release until oscillator stops
+                this.filter.connect(this.delay);
+                this.delay.connect(this.delayWet);
+
+                // Create merger for delay
+                this.delayMerge = this.audioContext.createGain();
+                this.delayDry.connect(this.delayMerge);
+                this.delayWet.connect(this.delayMerge);
+
+                // Delay merge to reverb (wet) and direct (dry)
+                this.delayMerge.connect(this.reverbDry);
+                this.delayMerge.connect(this.convolver);
+                this.convolver.connect(this.reverbWet);
+
+                // Create merger for reverb
+                this.reverbMerge = this.audioContext.createGain();
+                this.reverbDry.connect(this.reverbMerge);
+                this.reverbWet.connect(this.reverbMerge);
+
+                // Final output
+                this.reverbMerge.connect(this.masterGain);
+
+                // Start
+                this.oscillator.start(now);
+                this.lfo.start(now);
+
+                this.isPlaying = true;
+                this.currentNote = { frequency };
+
+                this.updateStatus(`Playing @ ${frequency}Hz`);
+            }
+
+            updatePitchEnvelope() {
+                if (!this.oscillator || !this.audioContext || !this.releaseStartTime) return;
+                if (this.params.pitchEnvelope === 'none') return;
+
+                const now = this.audioContext.currentTime;
+                const elapsed = now - this.releaseStartTime;
+                const progress = Math.min(1.0, elapsed / this.params.release);
+
+                // Calculate pitch envelope multiplier based on progress
+                let pitchMult = 1.0;
+                if (this.params.pitchEnvelope === 'up') {
+                    // Sweep up 2 octaves (multiply by 4)
+                    pitchMult = 1.0 + (3.0 * progress); // 1.0 to 4.0
+                } else if (this.params.pitchEnvelope === 'down') {
+                    // Sweep down 2 octaves (divide by 4)
+                    pitchMult = 1.0 - (0.75 * progress); // 1.0 to 0.25
+                }
+
+                // Apply pitch envelope to current manual frequency
+                // Use direct value assignment to match Python implementation behavior
+                const targetFreq = Math.max(20, this.params.frequency * pitchMult);
+                this.oscillator.frequency.value = targetFreq;
+
+                // Update LFO modulation depth to scale with frequency
+                // This ensures LFO modulation percentage stays consistent as pitch changes
+                if (this.lfoGain) {
+                    this.lfoGain.gain.value = targetFreq * (this.params.lfoDepth / 100);
+                }
+            }
+
+            release() {
+                if (!this.oscillator || !this.audioContext) return;
+
+                const now = this.audioContext.currentTime;
+                const releaseTime = this.params.release;
+
+                // Store release start time for pitch envelope tracking
+                this.releaseStartTime = now;
+
+                // Start pitch envelope updates if needed
+                if (this.params.pitchEnvelope !== 'none') {
+                    // Clear any existing interval
+                    if (this.pitchEnvelopeUpdateInterval) {
+                        clearInterval(this.pitchEnvelopeUpdateInterval);
+                    }
+                    // Update pitch envelope every 10ms for smooth tracking
+                    this.pitchEnvelopeUpdateInterval = setInterval(() => {
+                        this.updatePitchEnvelope();
+                    }, 10);
+                    // Clear interval after release completes
+                    setTimeout(() => {
+                        if (this.pitchEnvelopeUpdateInterval) {
+                            clearInterval(this.pitchEnvelopeUpdateInterval);
+                            this.pitchEnvelopeUpdateInterval = null;
+                        }
+                    }, releaseTime * 1000 + 100);
+                }
+
+                // Smooth gain release
+                if (this.envelope) {
+                    this.envelope.gain.cancelScheduledValues(now);
+                    this.envelope.gain.setValueAtTime(this.envelope.gain.value, now);
+                    this.envelope.gain.linearRampToValueAtTime(0, now + releaseTime);
+                }
+
+                // Schedule stop after release
+                const stopTime = now + releaseTime + 0.1;
+
+                if (this.oscillator) {
+                    this.oscillator.stop(stopTime);
+                    // Don't null oscillator yet - pitch envelope needs it during release
+                }
+
+                if (this.lfo) {
+                    this.lfo.stop(stopTime);
+                    // Don't null lfo yet - pitch envelope modulation needs it during release
+                }
+
+                this.isPlaying = false;
+                this.currentNote = null;
+
+                setTimeout(() => {
+                    // Disconnect and null all temporary nodes to prevent accumulation
+                    if (this.delayMerge) {
+                        this.delayMerge.disconnect();
+                        this.delayMerge = null;
+                    }
+                    if (this.reverbMerge) {
+                        this.reverbMerge.disconnect();
+                        this.reverbMerge = null;
+                    }
+
+                    // Now null the oscillator and lfo after release completes
+                    this.oscillator = null;
+                    this.lfo = null;
+                    if (!this.isPlaying) {
+                        this.updateStatus('Ready');
+                    }
+                    this.releaseStartTime = null;
+                }, (releaseTime + 0.1) * 1000);
+            }
+
+            setParam(name, value) {
+                this.params[name] = value;
+
+                // Update live nodes
+                switch (name) {
+                    case 'filterFreq':
+                        if (this.filter && this.audioContext) {
+                            // Smooth parameter change to prevent zipper noise
+                            const now = this.audioContext.currentTime;
+                            this.filter.frequency.setTargetAtTime(value, now, 0.001); // ~1ms smoothing
+                        }
+                        break;
+                    case 'filterRes':
+                        if (this.filter && this.audioContext) {
+                            // Smooth parameter change to prevent zipper noise
+                            const now = this.audioContext.currentTime;
+                            this.filter.Q.setTargetAtTime(value, now, 0.001); // ~1ms smoothing
+                        }
+                        break;
+                    case 'delayTime':
+                        if (this.delay) this.delay.delayTime.value = value;
+                        break;
+                    case 'delayFeedback':
+                        if (this.delayFeedbackGain) this.delayFeedbackGain.gain.value = value;
+                        break;
+                    case 'delayMix':
+                        if (this.delayWet) this.delayWet.gain.value = value;
+                        break;
+                    case 'tapeSaturation':
+                        if (this.tapeSaturator) {
+                            this.tapeSaturator.curve = this.createTapeSaturationCurve(value);
+                        }
+                        break;
+                    case 'wobbleDepth':
+                        if (this.wobbleGain) this.wobbleGain.gain.value = value;
+                        break;
+                    case 'flutterDepth':
+                        if (this.flutterGain) this.flutterGain.gain.value = value;
+                        break;
+                    case 'reverbMix':
+                        if (this.reverbWet) this.reverbWet.gain.value = value;
+                        break;
+                    case 'reverbSize':
+                        this.createReverbIR();
+                        break;
+                    case 'volume':
+                        if (this.masterGain) this.masterGain.gain.value = value;
+                        break;
+                    case 'lfoRate':
+                        if (this.lfo) this.lfo.frequency.value = value;
+                        break;
+                    case 'lfoDepth':
+                        if (this.lfoGain && this.currentNote) {
+                            this.lfoGain.gain.value = this.currentNote.frequency * (value / 100);
+                        }
+                        break;
+                    case 'oscWaveform':
+                        if (this.oscillator) this.oscillator.type = value;
+                        break;
+                    case 'lfoWaveform':
+                        if (this.lfo) this.lfo.type = value;
+                        break;
+                    case 'frequency':
+                        // Update live oscillator if playing
+                        if (this.oscillator && this.isPlaying) {
+                            this.oscillator.frequency.value = value;
+                            // Also update LFO depth based on new frequency
+                            if (this.lfoGain) {
+                                this.lfoGain.gain.value = value * (this.params.lfoDepth / 100);
+                            }
+                            if (this.currentNote) {
+                                this.currentNote.frequency = value;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            updateStatus(text) {
+                const status = document.getElementById('status');
+                if (status) {
+                    status.textContent = text;
+                    status.className = 'status' + (this.isPlaying ? ' active' : '');
+                }
+            }
+
+            getAnalyserData() {
+                if (!this.analyser) return null;
+                const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+                this.analyser.getByteTimeDomainData(dataArray);
+                return dataArray;
+            }
+        }
+
+        // Initialize
+        const siren = new DubSiren();
+        let visualizerAnimationId = null;
+
+        // Start button handler
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            const success = await siren.init();
+            if (success) {
+                document.getElementById('startOverlay').classList.add('hidden');
+                document.getElementById('status').textContent = 'Ready - Set frequency and tap TRIGGER';
+                startVisualizer();
+            }
+        });
+
+        // Trigger button
+        const sirenBtn = document.getElementById('sirenBtn');
+
+        // Touch and mouse events for trigger
+        (function setupTriggerButton(btn) {
+            let isDown = false;
+
+            const start = (e) => {
+                e.preventDefault();
+                if (!isDown) {
+                    isDown = true;
+                    btn.classList.add('active');
+                    siren.trigger();
+                }
+            };
+
+            const end = (e) => {
+                e.preventDefault();
+                if (isDown) {
+                    isDown = false;
+                    btn.classList.remove('active');
+                    siren.release();
+                }
+            };
+
+            btn.addEventListener('touchstart', start, { passive: false });
+            btn.addEventListener('touchend', end, { passive: false });
+            btn.addEventListener('touchcancel', end, { passive: false });
+            btn.addEventListener('mousedown', start);
+            btn.addEventListener('mouseup', end);
+            btn.addEventListener('mouseleave', end);
+        })(sirenBtn);
+
+        // Frequency control - updates live and sets next trigger frequency
+        const freqSlider = document.getElementById('frequency');
+        freqSlider.addEventListener('input', (e) => {
+            const freq = parseInt(e.target.value);
+            document.getElementById('freqValue').textContent = freq;
+            siren.setParam('frequency', freq);
+        });
+
+        // Pitch envelope selector
+        const pitchEnvContainer = document.getElementById('pitchEnvelope');
+        const pitchEnvButtons = pitchEnvContainer.querySelectorAll('.pitch-env-btn');
+        pitchEnvButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                pitchEnvButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                siren.setParam('pitchEnvelope', btn.dataset.env);
+            });
+        });
+
+        // Slider controls
+        const sliderMappings = [
+            { id: 'lfoRate', param: 'lfoRate', display: 'lfoRateValue', format: v => v.toFixed(1) },
+            { id: 'lfoDepth', param: 'lfoDepth', display: 'lfoDepthValue', format: v => Math.round(v) },
+            { id: 'attack', param: 'attack', display: 'attackValue', format: v => v.toFixed(2) },
+            { id: 'release', param: 'release', display: 'releaseValue', format: v => v.toFixed(2) },
+            { id: 'filterFreq', param: 'filterFreq', display: 'filterFreqValue', format: v => Math.round(v) },
+            { id: 'filterRes', param: 'filterRes', display: 'filterResValue', format: v => v.toFixed(1) },
+            { id: 'delayTime', param: 'delayTime', display: 'delayTimeValue', format: v => v.toFixed(2) },
+            { id: 'delayFeedback', param: 'delayFeedback', display: 'delayFeedbackValue', format: v => Math.round(v), scale: 0.01 },
+            { id: 'delayMix', param: 'delayMix', display: 'delayMixValue', format: v => Math.round(v * 100), scale: 0.01 },
+            { id: 'tapeSaturation', param: 'tapeSaturation', display: 'tapeSaturationValue', format: v => Math.round(v * 100), scale: 0.01 },
+            { id: 'wobbleDepth', param: 'wobbleDepth', display: 'wobbleDepthValue', format: v => (v * 1000).toFixed(1), scale: 0.0001 },
+            { id: 'flutterDepth', param: 'flutterDepth', display: 'flutterDepthValue', format: v => (v * 1000).toFixed(1), scale: 0.0001 },
+            { id: 'reverbSize', param: 'reverbSize', display: 'reverbSizeValue', format: v => v.toFixed(2) },
+            { id: 'reverbMix', param: 'reverbMix', display: 'reverbMixValue', format: v => Math.round(v * 100), scale: 0.01 },
+            { id: 'volume', param: 'volume', display: 'volumeValue', format: v => Math.round(v * 100), scale: 0.01 },
+        ];
+
+        sliderMappings.forEach(mapping => {
+            const slider = document.getElementById(mapping.id);
+            if (slider) {
+                slider.addEventListener('input', (e) => {
+                    let value = parseFloat(e.target.value);
+                    const scaledValue = mapping.scale ? value * mapping.scale : value;
+                    siren.setParam(mapping.param, scaledValue);
+                    document.getElementById(mapping.display).textContent = mapping.format(scaledValue);
+                });
+            }
+        });
+
+        // Waveform selectors
+        function setupWaveformSelector(containerId, param) {
+            const container = document.getElementById(containerId);
+            const buttons = container.querySelectorAll('.waveform-btn');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    siren.setParam(param, btn.dataset.wave);
+                });
+            });
+        }
+
+        setupWaveformSelector('oscWaveform', 'oscWaveform');
+        setupWaveformSelector('lfoWaveform', 'lfoWaveform');
+
+        // Visualizer
+        function startVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            const resize = () => {
+                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            };
+            resize();
+            window.addEventListener('resize', resize);
+
+            function draw() {
+                const width = canvas.offsetWidth;
+                const height = canvas.offsetHeight;
+
+                // Clear
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(0, 0, width, height);
+
+                // Get waveform data
+                const dataArray = siren.getAnalyserData();
+                if (!dataArray) {
+                    visualizerAnimationId = requestAnimationFrame(draw);
+                    return;
+                }
+
+                // Draw waveform
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.beginPath();
+
+                const sliceWidth = width / dataArray.length;
+                let x = 0;
+
+                for (let i = 0; i < dataArray.length; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = (v * height) / 2;
+
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+
+                // Add glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#ffffff';
+
+                visualizerAnimationId = requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+
+        // Prevent zoom on double tap
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+
+        // Handle page visibility
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && siren.isPlaying) {
+                siren.release();
+            }
+        });
+    </script>
+</body>
+</html>

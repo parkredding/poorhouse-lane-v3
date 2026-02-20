@@ -1,0 +1,27 @@
+{
+  "name": "poor-house-dub-v2",
+  "version": "2.0.0",
+  "description": "Dub Siren Synthesizer with Web Audio API",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "synthesizer",
+    "dub",
+    "audio",
+    "web-audio"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "web-audio-test-api": "^0.5.2"
+  }
+}
