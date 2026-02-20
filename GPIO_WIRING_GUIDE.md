@@ -38,11 +38,11 @@ The pin assignments below carefully avoid these pins.
 
 | Encoder | Function (Bank A / Bank B) | CLK Pin | DT Pin | Physical Pins |
 |---------|---------------------------|---------|--------|---------------|
-| **Encoder 1** | Volume / Release Time | GPIO 17 | GPIO 2 | Pin 11, Pin 3 |
-| **Encoder 2** | Filter Freq / Delay Time | GPIO 27 | GPIO 22 | Pin 13, Pin 15 |
-| **Encoder 3** | Base Freq / Filter Res | GPIO 23 | GPIO 24 | Pin 16, Pin 18 |
-| **Encoder 4** | Delay Feedback / Osc Wave | GPIO 20 | GPIO 26 | Pin 38, Pin 37 |
-| **Encoder 5** | Reverb Mix / Reverb Size | GPIO 14 | GPIO 13 | Pin 8, Pin 33 |
+| **Encoder 1** | Volume / Release Time | GPIO 2 | GPIO 17 | Pin 3, Pin 11 |
+| **Encoder 2** | Filter Freq / Delay Time | GPIO 22 | GPIO 27 | Pin 15, Pin 13 |
+| **Encoder 3** | Base Freq / Filter Res | GPIO 24 | GPIO 23 | Pin 18, Pin 16 |
+| **Encoder 4** | Delay Feedback / Osc Wave | GPIO 26 | GPIO 20 | Pin 37, Pin 38 |
+| **Encoder 5** | Reverb Mix / Reverb Size | GPIO 13 | GPIO 14 | Pin 33, Pin 8 |
 
 ### 3 Buttons (3 GPIO pins)
 
@@ -159,36 +159,36 @@ Note: Pin order may vary by manufacturer - check your encoder's datasheet.
 
 **Encoder 1 (Volume / Release Time):**
 ```
-CLK (A) → Pin 11 (GPIO 17)
-DT (B)  → Pin 3  (GPIO 2)
+CLK (A) → Pin 3  (GPIO 2)
+DT (B)  → Pin 11 (GPIO 17)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 2 (Filter Freq / Delay Time):**
 ```
-CLK (A) → Pin 13 (GPIO 27)
-DT (B)  → Pin 15 (GPIO 22)
+CLK (A) → Pin 15 (GPIO 22)
+DT (B)  → Pin 13 (GPIO 27)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 3 (Base Freq / Filter Res):**
 ```
-CLK (A) → Pin 16 (GPIO 23)
-DT (B)  → Pin 18 (GPIO 24)
+CLK (A) → Pin 18 (GPIO 24)
+DT (B)  → Pin 16 (GPIO 23)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 4 (Delay FB / Osc Wave):**
 ```
-CLK (A) → Pin 38 (GPIO 20)
-DT (B)  → Pin 37 (GPIO 26)
+CLK (A) → Pin 37 (GPIO 26)
+DT (B)  → Pin 38 (GPIO 20)
 GND     → Pin 39 (GND)
 ```
 
 **Encoder 5 (Reverb Mix / Reverb Size):**
 ```
-CLK (A) → Pin 8  (GPIO 14)
-DT (B)  → Pin 33 (GPIO 13)
+CLK (A) → Pin 33 (GPIO 13)
+DT (B)  → Pin 8  (GPIO 14)
 GND     → Pin 9  (GND)
 ```
 
@@ -324,19 +324,19 @@ Wire one encoder at a time and test:
 
 ```bash
 # Encoder 1
-CLK: GPIO 17 (Pin 11), DT: GPIO 2 (Pin 3)
+CLK: GPIO 2 (Pin 3), DT: GPIO 17 (Pin 11)
 
 # Encoder 2
-CLK: GPIO 27 (Pin 13), DT: GPIO 22 (Pin 15)
+CLK: GPIO 22 (Pin 15), DT: GPIO 27 (Pin 13)
 
 # Encoder 3
-CLK: GPIO 23 (Pin 16), DT: GPIO 24 (Pin 18)
+CLK: GPIO 24 (Pin 18), DT: GPIO 23 (Pin 16)
 
 # Encoder 4
-CLK: GPIO 20 (Pin 38), DT: GPIO 26 (Pin 37)
+CLK: GPIO 26 (Pin 37), DT: GPIO 20 (Pin 38)
 
 # Encoder 5
-CLK: GPIO 14 (Pin 8), DT: GPIO 13 (Pin 33)
+CLK: GPIO 13 (Pin 33), DT: GPIO 14 (Pin 8)
 ```
 
 ### 4. Wire Buttons

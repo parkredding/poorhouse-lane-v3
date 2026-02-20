@@ -77,11 +77,11 @@ The design uses **5 rotary encoders** with **bank switching** to access 10 param
 
 | Encoder | CLK Pin | DT Pin | Bank A Parameter | Bank B Parameter (Shift Held) |
 |---------|---------|--------|------------------|-------------------------------|
-| **Encoder 1** | GPIO 17 | GPIO 2  | Volume           | Release Time |
-| **Encoder 2** | GPIO 27 | GPIO 22 | Filter Frequency | Delay Time |
-| **Encoder 3** | GPIO 23 | GPIO 24 | Base Frequency   | Filter Resonance |
-| **Encoder 4** | GPIO 20 | GPIO 26 | Delay Feedback   | Oscillator Waveform |
-| **Encoder 5** | GPIO 14 | GPIO 13 | Reverb Mix       | Reverb Size |
+| **Encoder 1** | GPIO 2  | GPIO 17 | Volume           | Release Time |
+| **Encoder 2** | GPIO 22 | GPIO 27 | Filter Frequency | Delay Time |
+| **Encoder 3** | GPIO 24 | GPIO 23 | Base Frequency   | Filter Resonance |
+| **Encoder 4** | GPIO 26 | GPIO 20 | Delay Feedback   | Oscillator Waveform |
+| **Encoder 5** | GPIO 13 | GPIO 14 | Reverb Mix       | Reverb Size |
 
 #### Momentary Switches (3 buttons)
 

@@ -20,17 +20,17 @@ namespace DubSiren {
  * These pins avoid I2S pins (18, 19, 21) used by PCM5102 DAC.
  */
 namespace GPIO {
-    // Encoder pins (CLK, DT)
-    constexpr int ENCODER_1_CLK = 17;
-    constexpr int ENCODER_1_DT = 2;
-    constexpr int ENCODER_2_CLK = 27;
-    constexpr int ENCODER_2_DT = 22;
-    constexpr int ENCODER_3_CLK = 23;
-    constexpr int ENCODER_3_DT = 24;
-    constexpr int ENCODER_4_CLK = 20;
-    constexpr int ENCODER_4_DT = 26;
-    constexpr int ENCODER_5_CLK = 14;
-    constexpr int ENCODER_5_DT = 13;
+    // Encoder pins (CLK, DT) — swapped for EC11 footprint
+    constexpr int ENCODER_1_CLK = 2;
+    constexpr int ENCODER_1_DT = 17;
+    constexpr int ENCODER_2_CLK = 22;
+    constexpr int ENCODER_2_DT = 27;
+    constexpr int ENCODER_3_CLK = 24;
+    constexpr int ENCODER_3_DT = 23;
+    constexpr int ENCODER_4_CLK = 26;
+    constexpr int ENCODER_4_DT = 20;
+    constexpr int ENCODER_5_CLK = 13;
+    constexpr int ENCODER_5_DT = 14;
     
     // Button pins
     constexpr int TRIGGER_BTN = 4;
