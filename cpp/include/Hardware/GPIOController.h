@@ -20,26 +20,26 @@ namespace DubSiren {
  * These pins avoid I2S pins (18, 19, 21) used by PCM5102 DAC.
  */
 namespace GPIO {
-    // Encoder pins (CLK, DT)
-    constexpr int ENCODER_1_CLK = 17;
-    constexpr int ENCODER_1_DT = 2;
-    constexpr int ENCODER_2_CLK = 27;
-    constexpr int ENCODER_2_DT = 22;
-    constexpr int ENCODER_3_CLK = 23;
-    constexpr int ENCODER_3_DT = 24;
-    constexpr int ENCODER_4_CLK = 20;
-    constexpr int ENCODER_4_DT = 26;
-    constexpr int ENCODER_5_CLK = 14;
-    constexpr int ENCODER_5_DT = 13;
+    // Encoder pins (CLK, DT) - swapped to match EC11 PCB footprint
+    constexpr int ENCODER_1_CLK = 2;
+    constexpr int ENCODER_1_DT = 17;
+    constexpr int ENCODER_2_CLK = 22;
+    constexpr int ENCODER_2_DT = 27;
+    constexpr int ENCODER_3_CLK = 24;
+    constexpr int ENCODER_3_DT = 23;
+    constexpr int ENCODER_4_CLK = 26;
+    constexpr int ENCODER_4_DT = 20;
+    constexpr int ENCODER_5_CLK = 13;
+    constexpr int ENCODER_5_DT = 14;
     
     // Button pins
     constexpr int TRIGGER_BTN = 4;
     constexpr int SHIFT_BTN = 15;
     constexpr int SHUTDOWN_BTN = 3;
     
-    // 3-position switch pins (ON/OFF/ON for pitch envelope)
-    constexpr int PITCH_ENV_UP = 10;    // Pin 19
-    constexpr int PITCH_ENV_DOWN = 9;   // Pin 21
+    // 3-position switch pins (ON/OFF/ON for pitch envelope) - swapped to match PCB footprint
+    constexpr int PITCH_ENV_UP = 9;     // Pin 21
+    constexpr int PITCH_ENV_DOWN = 10;  // Pin 19
     
     // Optional WS2812 LED data pin (supports PWM)
     constexpr int LED_DATA = 12;        // Pin 32 (PWM0)
