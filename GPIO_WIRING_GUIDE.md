@@ -9,8 +9,8 @@ The Dub Siren V2 uses **5 rotary encoders** with a **shift button** to control 1
 **Total GPIO pins: 15-16** (10 for encoders + 3 for buttons + 2 for pitch envelope switch + 1 optional for LED)
 
 ### Bank System
-- **Bank A (Normal):** Primary dub controls (volume, filter, delay, reverb)
-- **Bank B (Shift held):** Secondary controls (envelopes, waveforms, timing)
+- **Bank A (Normal):** Primary dub controls (LFO, frequency, filter, delay, reverb)
+- **Bank B (Shift held):** Secondary controls (LFO rate, timing, resonance, waveforms)
 
 ## Components Needed
 
@@ -38,9 +38,9 @@ The pin assignments below carefully avoid these pins.
 
 | Encoder | Function (Bank A / Bank B) | CLK Pin | DT Pin | Physical Pins |
 |---------|---------------------------|---------|--------|---------------|
-| **Encoder 1** | Volume / Release Time | GPIO 2 | GPIO 17 | Pin 3, Pin 11 |
-| **Encoder 2** | Filter Freq / Delay Time | GPIO 22 | GPIO 27 | Pin 15, Pin 13 |
-| **Encoder 3** | Base Freq / Filter Res | GPIO 24 | GPIO 23 | Pin 18, Pin 16 |
+| **Encoder 1** | LFO Depth / LFO Rate | GPIO 2 | GPIO 17 | Pin 3, Pin 11 |
+| **Encoder 2** | Base Freq / Delay Time | GPIO 22 | GPIO 27 | Pin 15, Pin 13 |
+| **Encoder 3** | Filter Freq / Filter Res | GPIO 24 | GPIO 23 | Pin 18, Pin 16 |
 | **Encoder 4** | Delay Feedback / Osc Wave | GPIO 26 | GPIO 20 | Pin 37, Pin 38 |
 | **Encoder 5** | Reverb Mix / Reverb Size | GPIO 13 | GPIO 14 | Pin 33, Pin 8 |
 
@@ -89,14 +89,14 @@ WS2812D-F5 RGB LED for visual status indication:
 ## Parameter Bank Mapping
 
 ### Bank A (Normal - no shift)
-1. **Volume** - Master output level (0-100%)
-2. **Filter Frequency** - Low-pass filter cutoff (20-20000 Hz)
-3. **Base Frequency** - Oscillator pitch (50-2000 Hz)
+1. **LFO Depth** - LFO filter modulation depth (0-100%)
+2. **Base Frequency** - Oscillator pitch (50-2000 Hz)
+3. **Filter Frequency** - Low-pass filter cutoff (20-20000 Hz)
 4. **Delay Feedback** - Echo repeats (0-95%)
 5. **Reverb Mix** - Reverb dry/wet (0-100%)
 
 ### Bank B (Hold Shift)
-1. **Release Time** - Envelope decay (0.001-5.0s)
+1. **LFO Rate** - LFO oscillation rate (0.1-20 Hz)
 2. **Delay Time** - Echo timing (0.001-2.0s)
 3. **Filter Resonance** - Filter emphasis (0-95%)
 4. **Osc Waveform** - Oscillator shape (Sine/Square/Saw/Triangle)
@@ -157,21 +157,21 @@ Note: Pin order may vary by manufacturer - check your encoder's datasheet.
       Some encoders label pins as A/B/C or have different arrangements.
 ```
 
-**Encoder 1 (Volume / Release Time):**
+**Encoder 1 (LFO Depth / LFO Rate):**
 ```
 CLK (A) → Pin 3  (GPIO 2)
 DT (B)  → Pin 11 (GPIO 17)
 GND     → Pin 9  (GND)
 ```
 
-**Encoder 2 (Filter Freq / Delay Time):**
+**Encoder 2 (Base Freq / Delay Time):**
 ```
 CLK (A) → Pin 15 (GPIO 22)
 DT (B)  → Pin 13 (GPIO 27)
 GND     → Pin 9  (GND)
 ```
 
-**Encoder 3 (Base Freq / Filter Res):**
+**Encoder 3 (Filter Freq / Filter Res):**
 ```
 CLK (A) → Pin 18 (GPIO 24)
 DT (B)  → Pin 16 (GPIO 23)
@@ -295,7 +295,7 @@ GND (VSS)  → Pin 6, 9, or any GND
     │  ┌────────────────────────────────────┐ │
     │  │                                    │ │
     │  │  [Enc1] [Enc2] [Enc3] [Enc4] [Enc5]│ │
-    │  │   Vol  Filter  Pitch Delay  Reverb │ │
+    │  │   LFO  B.Freq Filter Delay  Reverb │ │
     │  │                                    │ │
     │  │  [Trig] [Pitch] [Shift] [Shutdown]│ │
     │  │                                    │ │
@@ -369,15 +369,15 @@ sudo journalctl -u dubsiren.service -f
 
 ### 2. Test Each Encoder (Bank A)
 
-**Encoder 1 (Volume):**
-- Turn clockwise → Should see `[Bank A] volume: 0.520`
-- Turn counter-clockwise → Should see `[Bank A] volume: 0.480`
+**Encoder 1 (LFO Depth):**
+- Turn clockwise → Should see `[Bank A] lfo_depth: 0.542`
+- Turn counter-clockwise → Should see `[Bank A] lfo_depth: 0.458`
 
-**Encoder 2 (Filter Frequency):**
-- Turn → Should see `[Bank A] filter_freq: XXXX.000`
-
-**Encoder 3 (Base Frequency):**
+**Encoder 2 (Base Frequency):**
 - Turn → Should see `[Bank A] base_freq: XXX.XXX`
+
+**Encoder 3 (Filter Frequency):**
+- Turn → Should see `[Bank A] filter_freq: XXXX.000`
 
 **Encoder 4 (Delay Feedback):**
 - Turn → Should see `[Bank A] delay_feedback: 0.XXX`
@@ -389,7 +389,7 @@ sudo journalctl -u dubsiren.service -f
 
 **Hold Shift and turn encoders:**
 - Should see `Bank B active`
-- Encoder 1 → `[Bank B] release: X.XXX`
+- Encoder 1 → `[Bank B] lfo_rate: X.XXX`
 - Encoder 2 → `[Bank B] delay_time: X.XXX`
 - Encoder 3 → `[Bank B] filter_res: 0.XXX`
 - Encoder 4 → `[Bank B] osc_waveform: Sine/Square/Saw/Triangle`
@@ -470,7 +470,7 @@ For a permanent enclosure build:
 ┌──────────────────────────────────┐
 │                                  │
 │  [1]    [2]    [3]    [4]   [5]  │  ← Encoders
-│  Vol  Filter Pitch  Delay  Rev   │
+│  LFO  B.Freq Filter Delay  Rev   │
 │                                  │
 │  (Trigger)   ↑|○|↓   (Shift)     │  ← Buttons + 3-pos switch
 │              PITCH                │
@@ -482,9 +482,9 @@ For a permanent enclosure build:
 ### Tips
 - Use **panel-mount encoders** with mounting nuts
 - **Label each knob** with bank functions:
-  - `VOL / REL` (Volume / Release Time)
-  - `FILT / DLY` (Filter Freq / Delay Time)
-  - `PITCH / RES` (Base Freq / Filter Res)
+  - `LFO / RATE` (LFO Depth / LFO Rate)
+  - `FREQ / DLY` (Base Freq / Delay Time)
+  - `FILT / RES` (Filter Freq / Filter Res)
   - `FB / WAVE` (Delay Feedback / Osc Wave)
   - `MIX / SIZE` (Reverb Mix / Reverb Size)
 - Mount **Shift button** in easy reach

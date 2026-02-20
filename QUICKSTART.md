@@ -86,8 +86,8 @@ Commands in interactive mode:
 
 The control surface uses **5 rotary encoders** with a **shift button** for bank switching:
 
-- **Bank A (normal):** Volume, Filter Freq, Base Freq, Delay FB, Reverb Mix
-- **Bank B (shift held):** Release Time, Delay Time, Filter Res, Osc Waveform, Reverb Size
+- **Bank A (normal):** LFO Depth, Base Freq, Filter Freq, Delay FB, Reverb Mix
+- **Bank B (shift held):** LFO Rate, Delay Time, Filter Res, Osc Waveform, Reverb Size
 - **3 Buttons:** Trigger, Shift, Shutdown
 - **3-Position Toggle Switch:** Pitch Envelope (UP = rise / OFF = none / DOWN = fall)
 - **Optional:** WS2812 RGB LED for status indication

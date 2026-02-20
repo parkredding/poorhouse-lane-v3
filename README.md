@@ -159,8 +159,8 @@ The control surface uses 5 rotary encoders with a **shift button** for bank swit
 
 ```
 Encoders:  [Encoder 1]  [Encoder 2]  [Encoder 3]  [Encoder 4]  [Encoder 5]
-            Volume       Filter       Base Freq    Delay FB     Reverb Mix
-            (Release)    (Delay)      (Filter Res) (Osc Wave)   (Rev Size)
+            LFO Depth    Base Freq    Filter Freq  Delay FB     Reverb Mix
+            (LFO Rate)   (Delay)      (Filter Res) (Osc Wave)   (Rev Size)
 
 Buttons:   [TRIGGER]    [↑|○|↓]      [SHIFT]      [SHUTDOWN]
                         PITCH ENV
@@ -173,9 +173,9 @@ Optional:  [◉ LED]  ← WS2812 status indicator
 
 | Encoder | Parameter | Function | Range |
 |---------|-----------|----------|-------|
-| **Encoder 1** | Volume | Master output volume | 0.0 to 1.0 |
-| **Encoder 2** | Filter Freq | Low-pass filter cutoff frequency | 20Hz to 20kHz |
-| **Encoder 3** | Base Freq | Oscillator base pitch | 50Hz to 2kHz |
+| **Encoder 1** | LFO Depth | LFO filter modulation depth | 0.0 to 1.0 |
+| **Encoder 2** | Base Freq | Oscillator base pitch | 50Hz to 2kHz |
+| **Encoder 3** | Filter Freq | Low-pass filter cutoff frequency | 20Hz to 20kHz |
 | **Encoder 4** | Delay FB | Delay feedback amount | 0.0 to 0.95 |
 | **Encoder 5** | Reverb Mix | Reverb dry/wet mix | 0.0 (dry) to 1.0 (wet) |
 
@@ -183,7 +183,7 @@ Optional:  [◉ LED]  ← WS2812 status indicator
 
 | Encoder | Parameter | Function | Range |
 |---------|-----------|----------|-------|
-| **Encoder 1** | Release Time | Oscillator envelope release time | 0.001s to 5.0s |
+| **Encoder 1** | LFO Rate | LFO oscillation rate | 0.1Hz to 20Hz |
 | **Encoder 2** | Delay Time | Delay effect time | 0.001s to 2.0s |
 | **Encoder 3** | Filter Res | Filter resonance/emphasis | 0.0 to 0.95 |
 | **Encoder 4** | Osc Wave | Oscillator waveform | Sine/Square/Saw/Triangle |

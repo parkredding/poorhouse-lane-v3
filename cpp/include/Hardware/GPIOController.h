@@ -169,8 +169,8 @@ enum class SecretMode {
  * Control surface handler for the Dub Siren.
  *
  * 5 Encoders with bank switching:
- * - Bank A: Volume, Base Freq, Filter Freq, Delay Feedback, Reverb Mix
- * - Bank B: Release Time, Delay Time, Filter Res, Osc Waveform, Reverb Size
+ * - Bank A: LFO Depth, Base Freq, Filter Freq, Delay Feedback, Reverb Mix
+ * - Bank B: LFO Rate, Delay Time, Filter Res, Osc Waveform, Reverb Size
  *
  * 4 Buttons: Trigger, Pitch Envelope, Shift, Shutdown
  *
