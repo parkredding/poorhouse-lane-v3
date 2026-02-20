@@ -38,11 +38,11 @@ The pin assignments below carefully avoid these pins.
 
 | Encoder | Function (Bank A / Bank B) | CLK Pin | DT Pin | Physical Pins |
 |---------|---------------------------|---------|--------|---------------|
-| **Encoder 1** | Volume / Release Time | GPIO 17 | GPIO 2 | Pin 11, Pin 3 |
-| **Encoder 2** | Filter Freq / Delay Time | GPIO 27 | GPIO 22 | Pin 13, Pin 15 |
-| **Encoder 3** | Base Freq / Filter Res | GPIO 23 | GPIO 24 | Pin 16, Pin 18 |
-| **Encoder 4** | Delay Feedback / Osc Wave | GPIO 20 | GPIO 26 | Pin 38, Pin 37 |
-| **Encoder 5** | Reverb Mix / Reverb Size | GPIO 14 | GPIO 13 | Pin 8, Pin 33 |
+| **Encoder 1** | Volume / Release Time | GPIO 2 | GPIO 17 | Pin 3, Pin 11 |
+| **Encoder 2** | Filter Freq / Delay Time | GPIO 22 | GPIO 27 | Pin 15, Pin 13 |
+| **Encoder 3** | Base Freq / Filter Res | GPIO 24 | GPIO 23 | Pin 18, Pin 16 |
+| **Encoder 4** | Delay Feedback / Osc Wave | GPIO 26 | GPIO 20 | Pin 37, Pin 38 |
+| **Encoder 5** | Reverb Mix / Reverb Size | GPIO 13 | GPIO 14 | Pin 33, Pin 8 |
 
 ### 3 Buttons (3 GPIO pins)
 
@@ -58,9 +58,9 @@ The pin assignments below carefully avoid these pins.
 
 | Position | Pitch Envelope | GPIO Pin | Physical Pin |
 |----------|----------------|----------|--------------|
-| **UP** | Rise (pitch sweeps up on release) | GPIO 10 | Pin 19 |
+| **UP** | Rise (pitch sweeps up on release) | GPIO 9 | Pin 21 |
 | **OFF** | None (no pitch sweep) | — | — |
-| **DOWN** | Fall (pitch sweeps down on release) | GPIO 9 | Pin 21 |
+| **DOWN** | Fall (pitch sweeps down on release) | GPIO 10 | Pin 19 |
 
 ### Optional Status LED (1 GPIO pin)
 
@@ -110,24 +110,24 @@ WS2812D-F5 RGB LED for visual status indication:
 Raspberry Pi Zero 2W GPIO Header (40-pin)
 ┌────────────────────────────────────────┐
 │ 1  3.3V        [5V]     2  │
-│ 3  [GPIO 2]    5V       4  │  ← Enc1-DT
+│ 3  [GPIO 2]    5V       4  │  ← Enc1-CLK
 │ 5  [GPIO 3]    [GND]    6  │  ← Shutdown, PCM5102 GND
-│ 7  [GPIO 4]    [GPIO 14] 8 │  ← Trigger, Enc5-CLK
+│ 7  [GPIO 4]    [GPIO 14] 8 │  ← Trigger, Enc5-DT
 │ 9  [GND]       [GPIO 15] 10│  ← Common GND, Shift
-│ 11 [GPIO 17]   GPIO 18  12 │  ← Enc1-CLK, I2S (DO NOT USE 18!)
-│ 13 [GPIO 27]   [GND]    14 │  ← Enc2-CLK
-│ 15 [GPIO 22]   [GPIO 23] 16│  ← Enc2-DT, Enc3-CLK
-│ 17 3.3V        [GPIO 24] 18│  ← Enc3-DT
-│ 19 [GPIO 10]   [GND]    20 │  ← Pitch Env UP, Switch GND
-│ 21 [GPIO 9]    GPIO 25  22 │  ← Pitch Env DOWN
+│ 11 [GPIO 17]   GPIO 18  12 │  ← Enc1-DT, I2S (DO NOT USE 18!)
+│ 13 [GPIO 27]   [GND]    14 │  ← Enc2-DT
+│ 15 [GPIO 22]   [GPIO 23] 16│  ← Enc2-CLK, Enc3-DT
+│ 17 3.3V        [GPIO 24] 18│  ← Enc3-CLK
+│ 19 [GPIO 10]   [GND]    20 │  ← Pitch Env DOWN, Switch GND
+│ 21 [GPIO 9]    GPIO 25  22 │  ← Pitch Env UP
 │ 23 GPIO 11     GPIO 8   24 │
 │ 25 [GND]       GPIO 7   26 │
 │ 27 ID_SD       ID_SC    28 │
 │ 29 GPIO 5      [GND]    30 │
 │ 31 GPIO 6      GPIO 12  32 │
-│ 33 [GPIO 13]   [GND]    34 │  ← Enc5-DT
+│ 33 [GPIO 13]   [GND]    34 │  ← Enc5-CLK
 │ 35 GPIO 19     GPIO 16  36 │  ← I2S (DO NOT USE 19!)
-│ 37 [GPIO 26]   [GPIO 20] 38│  ← Enc4-DT, Enc4-CLK
+│ 37 [GPIO 26]   [GPIO 20] 38│  ← Enc4-CLK, Enc4-DT
 │ 39 [GND]       GPIO 21  40 │  ← I2S (DO NOT USE 21!)
 └────────────────────────────────────────┘
 
@@ -159,36 +159,36 @@ Note: Pin order may vary by manufacturer - check your encoder's datasheet.
 
 **Encoder 1 (Volume / Release Time):**
 ```
-CLK (A) → Pin 11 (GPIO 17)
-DT (B)  → Pin 3  (GPIO 2)
+CLK (A) → Pin 3  (GPIO 2)
+DT (B)  → Pin 11 (GPIO 17)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 2 (Filter Freq / Delay Time):**
 ```
-CLK (A) → Pin 13 (GPIO 27)
-DT (B)  → Pin 15 (GPIO 22)
+CLK (A) → Pin 15 (GPIO 22)
+DT (B)  → Pin 13 (GPIO 27)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 3 (Base Freq / Filter Res):**
 ```
-CLK (A) → Pin 16 (GPIO 23)
-DT (B)  → Pin 18 (GPIO 24)
+CLK (A) → Pin 18 (GPIO 24)
+DT (B)  → Pin 16 (GPIO 23)
 GND     → Pin 9  (GND)
 ```
 
 **Encoder 4 (Delay FB / Osc Wave):**
 ```
-CLK (A) → Pin 38 (GPIO 20)
-DT (B)  → Pin 37 (GPIO 26)
+CLK (A) → Pin 37 (GPIO 26)
+DT (B)  → Pin 38 (GPIO 20)
 GND     → Pin 39 (GND)
 ```
 
 **Encoder 5 (Reverb Mix / Reverb Size):**
 ```
-CLK (A) → Pin 8  (GPIO 14)
-DT (B)  → Pin 33 (GPIO 13)
+CLK (A) → Pin 33 (GPIO 13)
+DT (B)  → Pin 8  (GPIO 14)
 GND     → Pin 9  (GND)
 ```
 
@@ -232,15 +232,15 @@ Use an ON/OFF/ON SPDT toggle switch. The middle position is OFF (no pitch envelo
 └─────────────────────────────────┘
 
 Wiring:
-  Terminal 1 (UP)   → Pin 19 (GPIO 10)
+  Terminal 1 (UP)   → Pin 21 (GPIO 9)
   Terminal C (COM)  → Pin 20 (GND)
-  Terminal 2 (DOWN) → Pin 21 (GPIO 9)
+  Terminal 2 (DOWN) → Pin 19 (GPIO 10)
 ```
 
 **Switch positions:**
-- **UP:** Terminal 1 connects to Common → GPIO 10 reads LOW → Pitch rises on release
-- **CENTER:** Neither terminal connected → Both GPIOs read HIGH → No pitch envelope  
-- **DOWN:** Terminal 2 connects to Common → GPIO 9 reads LOW → Pitch falls on release
+- **UP:** Terminal 1 connects to Common → GPIO 9 reads LOW → Pitch rises on release
+- **CENTER:** Neither terminal connected → Both GPIOs read HIGH → No pitch envelope
+- **DOWN:** Terminal 2 connects to Common → GPIO 10 reads LOW → Pitch falls on release
 
 ### Optional WS2812 Status LED
 
@@ -324,19 +324,19 @@ Wire one encoder at a time and test:
 
 ```bash
 # Encoder 1
-CLK: GPIO 17 (Pin 11), DT: GPIO 2 (Pin 3)
+CLK: GPIO 2 (Pin 3), DT: GPIO 17 (Pin 11)
 
 # Encoder 2
-CLK: GPIO 27 (Pin 13), DT: GPIO 22 (Pin 15)
+CLK: GPIO 22 (Pin 15), DT: GPIO 27 (Pin 13)
 
 # Encoder 3
-CLK: GPIO 23 (Pin 16), DT: GPIO 24 (Pin 18)
+CLK: GPIO 24 (Pin 18), DT: GPIO 23 (Pin 16)
 
 # Encoder 4
-CLK: GPIO 20 (Pin 38), DT: GPIO 26 (Pin 37)
+CLK: GPIO 26 (Pin 37), DT: GPIO 20 (Pin 38)
 
 # Encoder 5
-CLK: GPIO 14 (Pin 8), DT: GPIO 13 (Pin 33)
+CLK: GPIO 13 (Pin 33), DT: GPIO 14 (Pin 8)
 ```
 
 ### 4. Wire Buttons
@@ -346,8 +346,8 @@ Shift:     GPIO 15 (Pin 10) to GND
 Shutdown:  GPIO 3  (Pin 5)  to GND
 
 # 3-Position Pitch Envelope Switch
-Pitch UP:   GPIO 10 (Pin 19) to switch terminal 1
-Pitch DOWN: GPIO 9  (Pin 21) to switch terminal 2
+Pitch UP:   GPIO 9  (Pin 21) to switch terminal 1
+Pitch DOWN: GPIO 10 (Pin 19) to switch terminal 2
 Common:     GND (Pin 20) to switch common terminal
 ```
 
@@ -530,16 +530,16 @@ To use different GPIO pins, edit `gpio_controller.py`:
 
 ```python
 ENCODER_PINS = {
-    'encoder_1': (17, 2),    # Change these
-    'encoder_2': (27, 22),   # Change these
-    'encoder_3': (23, 24),   # Change these
-    'encoder_4': (20, 26),   # Change these
-    'encoder_5': (14, 13),   # Change these
+    'encoder_1': (2, 17),    # Change these
+    'encoder_2': (22, 27),   # Change these
+    'encoder_3': (24, 23),   # Change these
+    'encoder_4': (26, 20),   # Change these
+    'encoder_5': (13, 14),   # Change these
 }
 
 SWITCH_PINS = {
     'trigger': 4,      # Change these
-    'pitch_env': 10,   # Change these
+    'pitch_env': 9,    # Change these
     'shift': 15,       # Change these
     'shutdown': 3,     # Change these
 }
