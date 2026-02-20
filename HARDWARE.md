@@ -77,9 +77,9 @@ The design uses **5 rotary encoders** with **bank switching** to access 10 param
 
 | Encoder | CLK Pin | DT Pin | Bank A Parameter | Bank B Parameter (Shift Held) |
 |---------|---------|--------|------------------|-------------------------------|
-| **Encoder 1** | GPIO 2  | GPIO 17 | Volume           | Release Time |
-| **Encoder 2** | GPIO 22 | GPIO 27 | Filter Frequency | Delay Time |
-| **Encoder 3** | GPIO 24 | GPIO 23 | Base Frequency   | Filter Resonance |
+| **Encoder 1** | GPIO 2  | GPIO 17 | LFO Depth        | LFO Rate |
+| **Encoder 2** | GPIO 22 | GPIO 27 | Base Frequency   | Delay Time |
+| **Encoder 3** | GPIO 24 | GPIO 23 | Filter Frequency | Filter Resonance |
 | **Encoder 4** | GPIO 26 | GPIO 20 | Delay Feedback   | Oscillator Waveform |
 | **Encoder 5** | GPIO 13 | GPIO 14 | Reverb Mix       | Reverb Size |
 
@@ -147,8 +147,8 @@ Switch Wiring:
 │  │ ↻1 │  │ ↻2 │  │ ↻3 │  │ ↻4 │  │ ↻5 │       │
 │  └────┘  └────┘  └────┘  └────┘  └────┘       │
 │                                                  │
-│  Bank A:  Vol   Filter  Pitch   D.FB   R.Mix   │
-│  Bank B:  Rel   Delay   F.Res  Osc.W  R.Size   │
+│  Bank A:  LFO   B.Freq  Filter  D.FB   R.Mix   │
+│  Bank B: Rate   Delay   F.Res  Osc.W  R.Size   │
 │                                                  │
 │  ┌─────┐  ↑|○|↓   ┌─────┐ ┌─────┐   ◉         │
 │  │  ⏺  │  PITCH   │  ⏺  │ │  ⏺  │  LED       │
@@ -159,8 +159,8 @@ Switch Wiring:
 ```
 
 **How it works:**
-- **Normal operation (Bank A):** Encoders control Volume, Filter Freq, Base Freq, Delay FB, Reverb Mix
-- **Hold SHIFT (Bank B):** Same encoders now control Release, Delay Time, Filter Res, Osc Waveform, Reverb Size
+- **Normal operation (Bank A):** Encoders control LFO Depth, Base Freq, Filter Freq, Delay FB, Reverb Mix
+- **Hold SHIFT (Bank B):** Same encoders now control LFO Rate, Delay Time, Filter Res, Osc Waveform, Reverb Size
 - **TRIGGER:** Press to start siren, release to stop
 - **PITCH ENV:** 3-position toggle switch (UP=rise, OFF=none, DOWN=fall)
 - **SHIFT:** Hold to access Bank B; in secret modes, cycles presets
@@ -185,10 +185,10 @@ The 15-16 GPIO pins used by the control surface (GPIO 2, 3, 4, 9, 10, 12, 13, 14
 The shift button enables access to 10 parameters with only 5 encoders:
 
 **Bank A (default):**
-- Immediate sound shaping: Volume, Filter Freq, Base Freq, Delay FB, Reverb Mix
+- Immediate sound shaping: LFO Depth, Base Freq, Filter Freq, Delay FB, Reverb Mix
 
 **Bank B (shift held):**
-- Advanced parameters: Release Time, Delay Time, Filter Resonance, Oscillator Waveform, Reverb Size
+- Advanced parameters: LFO Rate, Delay Time, Filter Resonance, Oscillator Waveform, Reverb Size
 
 When you hold the shift button, all 5 encoders immediately control their Bank B parameters. Release shift to return to Bank A.
 

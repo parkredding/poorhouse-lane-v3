@@ -33,9 +33,9 @@ Connect only the PCM5102 DAC (see [HARDWARE.md](HARDWARE.md) for details).
 # q - Quit
 ```
 
-## Minimal Build Option 2: Volume + Trigger
+## Minimal Build Option 2: LFO Depth + Trigger
 
-Add basic volume control and trigger button.
+Add basic LFO depth control and trigger button.
 
 ### Hardware Required:
 - Everything from Option 1, plus:
@@ -44,10 +44,10 @@ Add basic volume control and trigger button.
 
 ### Wiring:
 
-**Encoder 1 (Volume):**
+**Encoder 1 (LFO Depth):**
 ```
-Encoder CLK → GPIO 17
-Encoder DT  → GPIO 2
+Encoder CLK → GPIO 2
+Encoder DT  → GPIO 17
 Encoder GND → GND
 ```
 
@@ -64,13 +64,13 @@ Switch Pin 2 → GND
 
 You should see the siren start up with partial hardware detected.
 **Controls:**
-- Rotate encoder 1 to adjust volume
+- Rotate encoder 1 to adjust LFO depth
 - Press trigger button to start siren
 - Release trigger button to stop
 
-## Minimal Build Option 3: Volume + Filter + Trigger
+## Minimal Build Option 3: LFO Depth + Base Freq + Trigger
 
-Add filter frequency control for tone shaping.
+Add base frequency control for pitch adjustment.
 
 ### Hardware Required:
 - Everything from Option 2, plus:
@@ -78,10 +78,10 @@ Add filter frequency control for tone shaping.
 
 ### Wiring:
 
-Add **Encoder 2 (Filter Frequency):**
+Add **Encoder 2 (Base Frequency):**
 ```
-Encoder CLK → GPIO 27
-Encoder DT  → GPIO 22
+Encoder CLK → GPIO 22
+Encoder DT  → GPIO 27
 Encoder GND → GND
 ```
 
@@ -91,8 +91,8 @@ Encoder GND → GND
 ```
 
 **Controls:**
-- Encoder 1: Volume (0.0 to 1.0)
-- Encoder 2: Filter frequency (20Hz to 20kHz) - shapes the tone
+- Encoder 1: LFO Depth (0.0 to 1.0)
+- Encoder 2: Base frequency (50Hz to 2kHz) - adjusts the pitch
 - Trigger: Start/stop siren
 
 ## Adding More Controls
@@ -100,11 +100,11 @@ Encoder GND → GND
 The control surface gracefully handles partial hardware. You can add encoders and buttons one at a time:
 
 ### Full Encoder List:
-1. **Encoder 1** (GPIO 17, 2) - Bank A: Volume | Bank B: Release Time
-2. **Encoder 2** (GPIO 27, 22) - Bank A: Filter Freq | Bank B: Delay Time
-3. **Encoder 3** (GPIO 23, 24) - Bank A: Base Freq | Bank B: Filter Res
-4. **Encoder 4** (GPIO 20, 26) - Bank A: Delay FB | Bank B: Osc Waveform
-5. **Encoder 5** (GPIO 14, 13) - Bank A: Reverb Mix | Bank B: Reverb Size
+1. **Encoder 1** (GPIO 2, 17) - Bank A: LFO Depth | Bank B: LFO Rate
+2. **Encoder 2** (GPIO 22, 27) - Bank A: Base Freq | Bank B: Delay Time
+3. **Encoder 3** (GPIO 24, 23) - Bank A: Filter Freq | Bank B: Filter Res
+4. **Encoder 4** (GPIO 26, 20) - Bank A: Delay FB | Bank B: Osc Waveform
+5. **Encoder 5** (GPIO 13, 14) - Bank A: Reverb Mix | Bank B: Reverb Size
 
 ### Full Button List:
 1. **Trigger** (GPIO 4) - Start/stop siren
@@ -112,9 +112,9 @@ The control surface gracefully handles partial hardware. You can add encoders an
 3. **Shutdown** (GPIO 3) - Safe system shutdown
 
 ### Pitch Envelope Switch (3-Position Toggle):
-- **UP** (GPIO 10) - Pitch rises on release
+- **UP** (GPIO 9) - Pitch rises on release
 - **OFF** (center) - No pitch envelope
-- **DOWN** (GPIO 9) - Pitch falls on release
+- **DOWN** (GPIO 10) - Pitch falls on release
 
 ### Optional LED:
 - **WS2812 LED** (GPIO 12) - Status indicator with color cycling
@@ -123,8 +123,8 @@ The control surface gracefully handles partial hardware. You can add encoders an
 
 1. **Start with audio only** - Verify DAC and I2S work
 2. **Add trigger button** - Test GPIO and basic control
-3. **Add volume encoder** - Verify encoder wiring and quadrature decoding
-4. **Add filter freq encoder** - Test multiple encoders working together
+3. **Add LFO depth encoder** - Verify encoder wiring and quadrature decoding
+4. **Add base freq encoder** - Test multiple encoders working together
 5. **Add remaining encoders** - Build out Bank A controls
 6. **Add shift button** - Enable Bank B access
 7. **Add pitch envelope switch** - 3-position toggle for pitch control
