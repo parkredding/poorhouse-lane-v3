@@ -1,11 +1,11 @@
 #!/bin/bash
 # Dub Siren V2 C++ Edition - One-line Installer for Raspberry Pi Zero 2W
-# Usage: curl -sSL https://raw.githubusercontent.com/parkredding/poor-house-dub-v2/main/cpp/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/parkredding/poorhouse-lane-v3/main/cpp/install.sh | bash
 
 set -e
 
-REPO_URL="https://github.com/parkredding/poor-house-dub-v2.git"
-INSTALL_DIR="$HOME/poor-house-dub-v2"
+REPO_URL="https://github.com/parkredding/poorhouse-lane-v3.git"
+INSTALL_DIR="$HOME/poorhouse-lane-v3"
 BRANCH="${1:-main}"
 
 # Colors for output
@@ -135,10 +135,10 @@ echo "3️⃣  Reboot your Raspberry Pi:"
 echo -e "    ${CYAN}sudo reboot${NC}"
 echo ""
 echo "4️⃣  After reboot, test in simulation mode:"
-echo -e "    ${CYAN}~/poor-house-dub-v2/cpp/build/dubsiren --simulate --interactive${NC}"
+echo -e "    ${CYAN}${INSTALL_DIR}/cpp/build/dubsiren --simulate --interactive${NC}"
 echo ""
 echo "5️⃣  Run on hardware:"
-echo -e "    ${CYAN}~/poor-house-dub-v2/cpp/build/dubsiren${NC}"
+echo -e "    ${CYAN}${INSTALL_DIR}/cpp/build/dubsiren${NC}"
 echo ""
 echo "6️⃣  Start/manage the service:"
 echo -e "    ${CYAN}sudo systemctl start dubsiren-cpp.service${NC}"
@@ -159,9 +159,9 @@ echo "  XSMT           →  GND (soft mute OFF = audio ON)"
 echo ""
 echo -e "${YELLOW}Documentation:${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  📖 C++ Guide:     ~/poor-house-dub-v2/cpp/README.md"
-echo "  🔧 Hardware:      ~/poor-house-dub-v2/HARDWARE.md"
-echo "  🎛️  GPIO wiring:  ~/poor-house-dub-v2/GPIO_WIRING_GUIDE.md"
+echo "  📖 C++ Guide:     $INSTALL_DIR/cpp/README.md"
+echo "  🔧 Hardware:      $INSTALL_DIR/HARDWARE.md"
+echo "  🎛️  GPIO wiring:  $INSTALL_DIR/GPIO_WIRING_GUIDE.md"
 echo ""
-echo "Need help? Visit: https://github.com/parkredding/poor-house-dub-v2"
+echo "Need help? Visit: ${REPO_URL%.git}"
 echo ""
