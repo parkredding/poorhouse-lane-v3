@@ -6,7 +6,7 @@
 - **Raspberry Pi Zero 2 W** - Main controller
 - **PCM5102 I2S DAC Module** - High-quality audio output
 - **5x Rotary Encoders (360°)** - EC11 5-pin encoders (no VCC required - uses Pi's internal pull-ups)
-- **3x Momentary Push Buttons** - Trigger, Shift, and Shutdown switches
+- **4x Momentary Push Buttons** - Trigger, Shift, Shutdown, and Waveform Cycle switches
 - **1x 3-Position Toggle Switch** - ON/OFF/ON SPDT for pitch envelope
 - **Power Supply** - 5V 2.5A recommended
 
@@ -69,7 +69,7 @@ Raspberry Pi Zero 2 (Top View)
 
 The design uses **5 rotary encoders** with **bank switching** to access 10 parameters. A shift button switches between Bank A (normal mode) and Bank B (shift held).
 
-**Total GPIO pins used: 15-16** (10 encoder pins + 3 button pins + 2 pitch switch pins + 1 optional LED pin)
+**Total GPIO pins used: 16-17** (10 encoder pins + 4 button pins + 2 pitch switch pins + 1 optional LED pin)
 
 ⚠️ **Critical:** This design avoids GPIO 18, 19, and 21 which are reserved for I2S audio (PCM5102 DAC).
 
@@ -83,13 +83,14 @@ The design uses **5 rotary encoders** with **bank switching** to access 10 param
 | **Encoder 4** | GPIO 26 | GPIO 20 | Delay Feedback   | Oscillator Waveform |
 | **Encoder 5** | GPIO 13 | GPIO 14 | Reverb Mix       | Reverb Size |
 
-#### Momentary Switches (3 buttons)
+#### Momentary Switches (4 buttons)
 
 | Button | GPIO Pin | Function |
 |--------|----------|----------|
 | **Trigger** | GPIO 4 | Main siren trigger (press/release) |
 | **Shift** | GPIO 15 | Hold to access Bank B parameters |
 | **Shutdown** | GPIO 3 | Safe system shutdown |
+| **Waveform** | GPIO 5 | Cycle waveform (Sine/Square/Saw/Triangle) |
 
 #### Pitch Envelope Switch (3-position ON/OFF/ON)
 
@@ -150,10 +151,10 @@ Switch Wiring:
 │  Bank A:  LFO   B.Freq  Filter  D.FB   R.Mix   │
 │  Bank B: Rate   Delay   F.Res  Osc.W  R.Size   │
 │                                                  │
-│  ┌─────┐  ↑|○|↓   ┌─────┐ ┌─────┐   ◉         │
-│  │  ⏺  │  PITCH   │  ⏺  │ │  ⏺  │  LED       │
-│  └─────┘   ENV    └─────┘ └─────┘             │
-│  TRIGGER (toggle) SHIFT  SHUTDOWN              │
+│  ┌─────┐ ┌─────┐ ↑|○|↓  ┌─────┐ ┌─────┐  ◉    │
+│  │  ⏺  │ │  ⏺  │ PITCH  │  ⏺  │ │  ⏺  │ LED   │
+│  └─────┘ └─────┘  ENV   └─────┘ └─────┘       │
+│  TRIGGER  WAVE  (toggle) SHIFT  SHUTDOWN       │
 │                                                  │
 └──────────────────────────────────────────────────┘
 ```
@@ -178,7 +179,7 @@ Switch Wiring:
 - **GPIO 19** - I2S BCLK (Bit Clock)
 - **GPIO 21** - I2S DOUT (Data)
 
-The 15-16 GPIO pins used by the control surface (GPIO 2, 3, 4, 9, 10, 12, 13, 14, 15, 17, 20, 22, 23, 24, 26, 27) are all safe to use alongside I2S.
+The 16-17 GPIO pins used by the control surface (GPIO 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 17, 20, 22, 23, 24, 26, 27) are all safe to use alongside I2S.
 
 ### Bank Switching Operation
 

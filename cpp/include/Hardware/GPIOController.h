@@ -41,6 +41,9 @@ namespace GPIO {
     constexpr int PITCH_ENV_UP = 9;     // Pin 21
     constexpr int PITCH_ENV_DOWN = 10;  // Pin 19
     
+    // Waveform cycle button
+    constexpr int WAVEFORM_BTN = 5;     // Pin 29 - cycles sine/square/saw/tri
+
     // Optional WS2812 LED data pin (supports PWM)
     constexpr int LED_DATA = 12;        // Pin 32 (PWM0)
 }
@@ -172,7 +175,7 @@ enum class SecretMode {
  * - Bank A: LFO Depth, Base Freq, Filter Freq, Delay Feedback, Reverb Mix
  * - Bank B: LFO Rate, Delay Time, Filter Res, Osc Waveform, Reverb Size
  *
- * 4 Buttons: Trigger, Pitch Envelope, Shift, Shutdown
+ * 5 Buttons: Trigger, Pitch Envelope, Shift, Shutdown, Waveform Cycle
  *
  * Secret Modes (triggered by rapid shift button presses):
  * - Pitch-Delay Mode: 3 rapid presses - Links pitch and delay inversely
@@ -269,7 +272,7 @@ private:
     
     // Hardware components
     std::array<std::unique_ptr<RotaryEncoder>, 5> encoders;
-    std::array<std::unique_ptr<MomentarySwitch>, 3> buttons;  // Trigger, Shift, Shutdown
+    std::array<std::unique_ptr<MomentarySwitch>, 4> buttons;  // Trigger, Shift, Shutdown, Waveform
     std::unique_ptr<ThreePositionSwitch> pitchEnvSwitch;      // 3-position pitch envelope
     std::unique_ptr<LEDController> ledController;             // Optional WS2812 status LED
     
@@ -282,7 +285,8 @@ private:
     void onShiftPress();
     void onShiftRelease();
     void onShutdownPress();
-    
+    void onWaveformPress();
+
     // Pitch envelope switch handler
     void onPitchEnvChange(SwitchPosition position);
     

@@ -34,7 +34,7 @@ struct gpiod_line_request* lineRequest = nullptr;
 
 // All GPIO pins we need to monitor
 const unsigned int ALL_PINS[] = {
-    2, 3, 4, 9, 10, 13, 14, 15, 17, 20, 22, 23, 24, 26, 27
+    2, 3, 4, 5, 9, 10, 13, 14, 15, 17, 20, 22, 23, 24, 26, 27
 };
 const size_t NUM_PINS = sizeof(ALL_PINS) / sizeof(ALL_PINS[0]);
 
@@ -504,7 +504,15 @@ void GPIOController::start() {
         );
         buttons[2]->start();
         std::cout << "  ✓ shutdown button initialized (GPIO " << GPIO::SHUTDOWN_BTN << ")" << std::endl;
-        
+
+        buttons[3] = std::make_unique<MomentarySwitch>(
+            GPIO::WAVEFORM_BTN,
+            [this]() { onWaveformPress(); },
+            nullptr
+        );
+        buttons[3]->start();
+        std::cout << "  ✓ waveform button initialized (GPIO " << GPIO::WAVEFORM_BTN << ")" << std::endl;
+
         // Create 3-position pitch envelope switch
         pitchEnvSwitch = std::make_unique<ThreePositionSwitch>(
             GPIO::PITCH_ENV_UP, GPIO::PITCH_ENV_DOWN,
@@ -561,7 +569,7 @@ void GPIOController::start() {
     std::cout << "\nBank A: LFO Depth, Base Freq, Filter Freq, Delay FB, Reverb Mix" << std::endl;
     std::cout << "Bank B: LFO Rate, Delay Time, Filter Res, Osc Wave, Reverb Size" << std::endl;
     std::cout << "\nMaster Volume: " << params.volume << " (fixed)" << std::endl;
-    std::cout << "\nButtons: Trigger, Shift (Bank A/B), Shutdown" << std::endl;
+    std::cout << "\nButtons: Trigger, Shift (Bank A/B), Shutdown, Waveform Cycle" << std::endl;
     std::cout << "Pitch Env Switch: UP=rise | OFF=none | DOWN=fall" << std::endl;
     if (ledController && ledController->isAvailable()) {
         std::cout << "Status LED: Active (GPIO " << GPIO::LED_DATA << ")" << std::endl;
@@ -828,13 +836,23 @@ void GPIOController::onShutdownPress() {
     std::cout << "  SHUTDOWN BUTTON PRESSED" << std::endl;
     std::cout << "  Safely shutting down the system..." << std::endl;
     std::cout << "============================================================" << std::endl;
-    
+
     if (shutdownCallback) {
         shutdownCallback();
     }
-    
+
     // Issue system shutdown command
     std::system("sudo shutdown -h now");
+}
+
+void GPIOController::onWaveformPress() {
+    const char* waveformNames[] = {"Sine", "Square", "Saw", "Triangle"};
+
+    // Cycle: 0 -> 1 -> 2 -> 3 -> 0 ...
+    params.oscWaveform = (params.oscWaveform + 1) % 4;
+    engine.setWaveform(params.oscWaveform);
+
+    std::cout << "Waveform: " << waveformNames[params.oscWaveform] << std::endl;
 }
 
 // ============================================================================
