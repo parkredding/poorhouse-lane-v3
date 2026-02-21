@@ -6,7 +6,7 @@ Complete wiring instructions for the Poor House Dub V2 control surface with shif
 
 The Dub Siren V2 uses **5 rotary encoders** with a **shift button** to control 10 parameters across 2 banks, plus 3 function buttons, a 3-position pitch envelope switch, and an optional status LED.
 
-**Total GPIO pins: 15-16** (10 for encoders + 3 for buttons + 2 for pitch envelope switch + 1 optional for LED)
+**Total GPIO pins: 16-17** (10 for encoders + 4 for buttons + 2 for pitch envelope switch + 1 optional for LED)
 
 ### Bank System
 - **Bank A (Normal):** Primary dub controls (LFO, frequency, filter, delay, reverb)
@@ -44,13 +44,14 @@ The pin assignments below carefully avoid these pins.
 | **Encoder 4** | Delay Feedback / Osc Wave | GPIO 26 | GPIO 20 | Pin 37, Pin 38 |
 | **Encoder 5** | Reverb Mix / Reverb Size | GPIO 13 | GPIO 14 | Pin 33, Pin 8 |
 
-### 3 Buttons (3 GPIO pins)
+### 4 Buttons (4 GPIO pins)
 
 | Button | Function | GPIO Pin | Physical Pin |
 |--------|----------|----------|--------------|
 | **Trigger** | Main sound trigger (hold to play) | GPIO 4 | Pin 7 |
 | **Shift** | Access Bank B parameters | GPIO 15 | Pin 10 |
 | **Shutdown** | Safe system shutdown | GPIO 3 | Pin 5 |
+| **Waveform** | Cycle waveform (Sine/Square/Saw/Tri) | GPIO 5 | Pin 29 |
 
 ### Pitch Envelope Switch (2 GPIO pins)
 
@@ -123,7 +124,7 @@ Raspberry Pi Zero 2W GPIO Header (40-pin)
 │ 23 GPIO 11     GPIO 8   24 │
 │ 25 [GND]       GPIO 7   26 │
 │ 27 ID_SD       ID_SC    28 │
-│ 29 GPIO 5      [GND]    30 │
+│ 29 [GPIO 5]    [GND]    30 │  ← Waveform Cycle
 │ 31 GPIO 6      GPIO 12  32 │
 │ 33 [GPIO 13]   [GND]    34 │  ← Enc5-CLK
 │ 35 GPIO 19     GPIO 16  36 │  ← I2S (DO NOT USE 19!)
@@ -192,7 +193,7 @@ DT (B)  → Pin 8  (GPIO 14)
 GND     → Pin 9  (GND)
 ```
 
-### Button Wiring (3 Buttons)
+### Button Wiring (4 Buttons)
 
 All buttons are wired as **active low** (pressed = connects to GND). Internal pull-ups are enabled in software.
 
@@ -212,6 +213,12 @@ Pin 2 → Pin 9  (GND)
 ```
 Pin 1 → Pin 5  (GPIO 3)
 Pin 2 → Pin 6  (GND)
+```
+
+**Waveform Cycle Button (Sine/Square/Saw/Tri):**
+```
+Pin 1 → Pin 29 (GPIO 5)
+Pin 2 → Pin 30 (GND)
 ```
 
 ### 3-Position Pitch Envelope Switch
@@ -344,6 +351,7 @@ CLK: GPIO 13 (Pin 33), DT: GPIO 14 (Pin 8)
 Trigger:   GPIO 4  (Pin 7)  to GND
 Shift:     GPIO 15 (Pin 10) to GND
 Shutdown:  GPIO 3  (Pin 5)  to GND
+Waveform:  GPIO 5  (Pin 29) to GND
 
 # 3-Position Pitch Envelope Switch
 Pitch UP:   GPIO 9  (Pin 21) to switch terminal 1
@@ -472,8 +480,8 @@ For a permanent enclosure build:
 │  [1]    [2]    [3]    [4]   [5]  │  ← Encoders
 │  LFO  B.Freq Filter Delay  Rev   │
 │                                  │
-│  (Trigger)   ↑|○|↓   (Shift)     │  ← Buttons + 3-pos switch
-│              PITCH                │
+│  (Trigger) (Wave)  ↑|○|↓ (Shift) │  ← Buttons + 3-pos switch
+│                    PITCH          │
 │  [Power LED]        (Shutdown)   │
 │                                  │
 └──────────────────────────────────┘
@@ -498,10 +506,11 @@ For a permanent enclosure build:
 - Encoder knobs (recommend 20mm diameter)
 - No breakout boards or modules needed - direct wiring to Pi
 
-### Buttons (3x) + Toggle Switch (1x)
+### Buttons (4x) + Toggle Switch (1x)
 - **Trigger:** Arcade button (30mm) or large tactile switch
 - **Shift:** 6mm tactile switch or small arcade button
 - **Shutdown:** Latching switch or recessed button (prevent accidents)
+- **Waveform:** 6mm tactile switch or small arcade button (cycles Sine/Square/Saw/Tri)
 - **Pitch Envelope:** 3-position ON/OFF/ON toggle switch (SPDT, panel mount)
 
 ### Wiring
