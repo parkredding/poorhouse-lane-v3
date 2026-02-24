@@ -253,7 +253,7 @@ if [ "${NEEDS_REBOOT:-false}" = true ]; then
     echo "A reboot is required before the audio device will be available."
     echo ""
     echo -e "After reboot, run the installer again to complete setup:"
-    echo -e "  ${CYAN}cd $CPP_DIR && bash setup.sh${NC}"
+    echo -e "  ${CYAN}cd \"$CPP_DIR\" && bash setup.sh${NC}"
     echo ""
     read -p "Reboot now? (Y/n): " REBOOT_CHOICE </dev/tty
     REBOOT_CHOICE=${REBOOT_CHOICE:-Y}
