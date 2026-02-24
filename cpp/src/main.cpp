@@ -26,6 +26,10 @@
 #include <xmmintrin.h>
 #endif
 
+#ifdef __linux__
+#include <sys/mman.h>
+#endif
+
 #include "Common.h"
 #include "Audio/AudioEngine.h"
 #include "Audio/AudioOutput.h"
@@ -126,7 +130,17 @@ int main(int argc, char* argv[]) {
     
     // Enable flush-to-zero to prevent denormal CPU spikes
     enableFlushToZero();
-    
+
+    // Lock all current and future memory pages to prevent page faults in the
+    // audio thread.  A single page fault can stall the thread for milliseconds,
+    // long enough to drain the ALSA ring buffer and cause an audible glitch.
+#ifdef __linux__
+    if (mlockall(MCL_CURRENT | MCL_FUTURE) != 0) {
+        std::cerr << "Warning: mlockall() failed (run as root or set memlock in "
+                     "/etc/security/limits.conf)" << std::endl;
+    }
+#endif
+
     printBanner();
     
     std::cout << "Initializing Dub Siren..." << std::endl;
