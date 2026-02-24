@@ -9,13 +9,14 @@ namespace DubSiren {
 // ============================================================================
 
 LowPassFilter::LowPassFilter(int sampleRate)
-    : sampleRate(sampleRate)
-    , cutoff(3000.0f)  // Standard filter setting for siren
+    : sampleRate(std::max(1, sampleRate))
+    , cutoff(3000.0f)
     , cutoffCurrent(3000.0f)
     , resonance(1.0f)
     , resonanceCurrent(1.0f)
-    , prevOutput(0.0f)
-    , smoothing(0.05f)  // Increased from 0.001 to allow LFO modulation to be audible
+    , lpState(0.0f)
+    , bpState(0.0f)
+    , smoothing(0.05f)
 {
 }
 
@@ -29,24 +30,33 @@ float LowPassFilter::processSample(float input) {
     // Smooth parameter changes to prevent zipper noise
     cutoffCurrent += (cutoff - cutoffCurrent) * smoothing;
     resonanceCurrent += (resonance - resonanceCurrent) * smoothing;
-    
-    // Calculate filter coefficient with smoothed cutoff
-    float rc = 1.0f / (TWO_PI * cutoffCurrent);
-    float dt = 1.0f / static_cast<float>(sampleRate);
-    float alpha = dt / (rc + dt);
-    
-    // Add resonance (feedback)
-    // Scale Q value (0.1-20) to reasonable feedback range
-    float resonanceFactor = (resonanceCurrent - 0.1f) / 19.9f;  // Normalize to 0.0-1.0
-    alpha = alpha * (1.0f + resonanceFactor * 2.0f);
-    alpha = std::min(alpha, 0.99f);
-    
-    float output = prevOutput + alpha * (input - prevOutput);
-    
-    // Clamp state to prevent runaway values that lead to NaN
-    prevOutput = clampSample(output);
-    
-    return output;
+
+    // Chamberlin State Variable Filter (2-pole, 12dB/oct).
+    // F = 2*sin(pi*fc/fs)  — frequency drive coefficient.
+    // A two-pole SVF produces a genuine resonant peak at the cutoff
+    // frequency rather than merely shifting it, so different waveforms
+    // stay perceptually distinct even at high Q values.
+    float fc = std::min(cutoffCurrent, static_cast<float>(sampleRate) * 0.49f);
+    float f = 2.0f * std::sin(PI * fc / static_cast<float>(sampleRate));
+
+    // q_inv = 1/Q (damping). resonance parameter maps directly to Q:
+    //   res ≈ 0.707 → Butterworth (no peak)
+    //   res = 1–5   → mild-to-strong resonant peak
+    //   res > 10    → near self-oscillation
+    float q_inv = 1.0f / resonanceCurrent;
+
+    // SVF tick: hp → bp → lp (canonical order — each stage feeds the next
+    // within the same sample, reducing the integration delay and improving
+    // stability at high Q).
+    float hp  = input - lpState - q_inv * bpState;
+    float bp  = f * hp + bpState;
+    float lp  = f * bp + lpState;
+
+    // Clamp integrator states to prevent runaway on extreme inputs
+    lpState = clampSample(lp);
+    bpState = clampSample(bp);
+
+    return lp;
 }
 
 void LowPassFilter::setCutoff(float freq) {
@@ -58,7 +68,8 @@ void LowPassFilter::setResonance(float res) {
 }
 
 void LowPassFilter::reset() {
-    prevOutput = 0.0f;
+    lpState = 0.0f;
+    bpState = 0.0f;
     cutoffCurrent = cutoff;
     resonanceCurrent = resonance;
 }
