@@ -7,6 +7,11 @@
 #include <memory>
 #include <string>
 
+#ifdef HAVE_ALSA
+// Forward-declare the ALSA PCM handle type so configureAlsa can appear in the header
+typedef struct _snd_pcm snd_pcm_t;
+#endif
+
 namespace DubSiren {
 
 /**
@@ -69,6 +74,10 @@ private:
     std::atomic<float> lastCpuUsage;
     
     void audioLoop();
+    void setRealtimePriority();
+#ifdef HAVE_ALSA
+    bool configureAlsa(snd_pcm_t* pcm);
+#endif
 };
 
 /**

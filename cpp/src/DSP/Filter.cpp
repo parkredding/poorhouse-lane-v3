@@ -4,6 +4,18 @@
 
 namespace DubSiren {
 
+// Bounded tanh approximation for integrator-state saturation.
+// Accurate to ~4% for |x| <= 3; hard-clamps beyond (true tanh ≈ ±1 there).
+// Much cheaper than std::tanh on Raspberry Pi while staying bounded,
+// unlike the fastTanh() Padé approximant in Common.h which diverges for
+// large inputs.
+static inline float tanhSat(float x) {
+    if (x > 3.0f) return 1.0f;
+    if (x < -3.0f) return -1.0f;
+    float x2 = x * x;
+    return x * (27.0f + x2) / (27.0f + 9.0f * x2);
+}
+
 // ============================================================================
 // LowPassFilter Implementation
 // ============================================================================
@@ -32,31 +44,31 @@ float LowPassFilter::processSample(float input) {
     resonanceCurrent += (resonance - resonanceCurrent) * smoothing;
 
     // Chamberlin State Variable Filter (2-pole, 12dB/oct).
-    // F = 2*sin(pi*fc/fs)  — frequency drive coefficient.
-    // A two-pole SVF produces a genuine resonant peak at the cutoff
-    // frequency rather than merely shifting it, so different waveforms
-    // stay perceptually distinct even at high Q values.
     float fc = std::min(cutoffCurrent, static_cast<float>(sampleRate) * 0.49f);
     float f = 2.0f * std::sin(PI * fc / static_cast<float>(sampleRate));
-
-    // q_inv = 1/Q (damping). resonance parameter maps directly to Q:
-    //   res ≈ 0.707 → Butterworth (no peak)
-    //   res = 1–5   → mild-to-strong resonant peak
-    //   res > 10    → near self-oscillation
     float q_inv = 1.0f / resonanceCurrent;
 
-    // SVF tick: hp → bp → lp (canonical order — each stage feeds the next
-    // within the same sample, reducing the integration delay and improving
-    // stability at high Q).
-    float hp  = input - lpState - q_inv * bpState;
-    float bp  = f * hp + bpState;
-    float lp  = f * bp + lpState;
+    // SVF tick: lp → hp → bp (canonical Chamberlin order).
+    // Computing lp first with the OLD bp state gives the classic delayed-
+    // feedback path described in Chamberlin (1985).  The previous hp→bp→lp
+    // ordering fed the current sample through both integrators in a single
+    // tick, producing higher instantaneous peaks at high resonance.
+    float lp = lpState + f * bpState;
+    float hp = input - lp - q_inv * bpState;
+    float bp = f * hp + bpState;
 
-    // Clamp integrator states to prevent runaway on extreme inputs
-    lpState = clampSample(lp);
-    bpState = clampSample(bp);
+    // Soft-saturate integrator states using tanh to emulate analog component
+    // saturation.  A resonant SVF amplifies signals near the cutoff by a
+    // factor of Q — with Q=5 a ±1.0 input can produce ±5.0 output, causing
+    // harsh digital clipping at the DAC.  Tanh saturation naturally limits
+    // the resonant peak while leaving the passband (which sits in the linear
+    // region of the curve) nearly unchanged.
+    constexpr float SAT = 1.5f;
+    lpState = SAT * tanhSat(lp / SAT);
+    bpState = SAT * tanhSat(bp / SAT);
 
-    return lp;
+    // Return the saturated value so downstream stages see the limited signal
+    return lpState;
 }
 
 void LowPassFilter::setCutoff(float freq) {
