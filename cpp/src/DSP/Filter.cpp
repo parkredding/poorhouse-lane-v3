@@ -9,7 +9,7 @@ namespace DubSiren {
 // ============================================================================
 
 LowPassFilter::LowPassFilter(int sampleRate)
-    : sampleRate(sampleRate)
+    : sampleRate(std::max(1, sampleRate))
     , cutoff(3000.0f)
     , cutoffCurrent(3000.0f)
     , resonance(1.0f)
@@ -45,10 +45,12 @@ float LowPassFilter::processSample(float input) {
     //   res > 10    → near self-oscillation
     float q_inv = 1.0f / resonanceCurrent;
 
-    // SVF tick: lp → band-pass → high-pass
-    float lp  = lpState + f * bpState;
-    float hp  = input - lp - q_inv * bpState;
+    // SVF tick: hp → bp → lp (canonical order — each stage feeds the next
+    // within the same sample, reducing the integration delay and improving
+    // stability at high Q).
+    float hp  = input - lpState - q_inv * bpState;
     float bp  = f * hp + bpState;
+    float lp  = f * bp + lpState;
 
     // Clamp integrator states to prevent runaway on extreme inputs
     lpState = clampSample(lp);
