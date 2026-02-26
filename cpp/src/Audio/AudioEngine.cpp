@@ -12,7 +12,6 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
     , oscillator(sampleRate)
     , lfo(sampleRate)
     , envelope(sampleRate)
-    , filter(sampleRate)
     , delay(sampleRate)
     , reverb(sampleRate)
     , mp3Player(std::make_unique<AudioFilePlayer>())
@@ -32,7 +31,7 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
     lfoBuffer.resize(bufferSize);
     filterBuffer.resize(bufferSize);
     delayBuffer.resize(bufferSize);
-    
+
     // Set initial parameters (Auto Wail preset)
     oscillator.setWaveform(Waveform::Square);  // Square for classic siren sound
     lfo.setFrequency(2.0f);      // 2 Hz - wee-woo every 0.5 seconds
@@ -40,7 +39,6 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
     lfo.setWaveform(Waveform::Triangle);  // Smooth pitch transitions
     envelope.setAttack(0.01f);
     envelope.setRelease(0.5f);
-    filter.setCutoff(3000.0f);   // Standard filter setting for siren
     delay.setDryWet(0.3f);
     delay.setFeedback(0.55f);    // Spacey dub echoes
     reverb.setDryWet(0.4f);      // Wet for atmosphere
@@ -115,17 +113,9 @@ void AudioEngine::process(float* output, int numFrames) {
         oscBuffer[i] = oscillator.generateSample();
     }
 
-    // Apply LFO to filter cutoff and process
-    float baseCutoff = filter.getCutoff();
-    for (int i = 0; i < numFrames; ++i) {
-        // LFO modulates filter cutoff by up to ±3 octaves (scaled by depth)
-        float modCutoff = baseCutoff * std::pow(2.0f, lfoBuffer[i] * 3.0f);
-        modCutoff = clamp(modCutoff, 20.0f, 12000.0f);
-        filter.setCutoff(modCutoff);
-        filterBuffer[i] = filter.processSample(oscBuffer[i]);
-    }
-    filter.setCutoff(baseCutoff);
-    
+    // Copy oscillator output to working buffer
+    std::copy(oscBuffer.begin(), oscBuffer.begin() + numFrames, filterBuffer.begin());
+
     // Apply envelope
     for (int i = 0; i < numFrames; ++i) {
         if (envBuffer[i] < 0.001f) {
@@ -243,14 +233,6 @@ void AudioEngine::setLfoWaveform(Waveform wf) {
 
 void AudioEngine::setLfoWaveform(int index) {
     setLfoWaveform(static_cast<Waveform>(index % 4));
-}
-
-void AudioEngine::setFilterCutoff(float freq) {
-    filter.setCutoff(freq);
-}
-
-void AudioEngine::setFilterResonance(float res) {
-    filter.setResonance(res);
 }
 
 void AudioEngine::setDelayTime(float seconds) {

@@ -542,9 +542,7 @@ void GPIOController::start() {
     engine.setLfoPitchDepth(0.5f);              // Auto Wail pitch modulation (wee-woo)
     engine.setLfoRate(params.lfoRate);
     engine.setLfoWaveform(Waveform::Triangle);  // Smooth pitch transitions
-    engine.setFilterCutoff(params.filterFreq);
     engine.setFrequency(params.baseFreq);
-    engine.setFilterResonance(params.filterRes);
     engine.setDelayFeedback(params.delayFeedback);
     engine.setReverbMix(params.reverbMix);
     engine.setReleaseTime(params.release);
@@ -603,9 +601,9 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
     Bank bank = currentBank.load();
 
     // Bank A parameters
-    const char* bankAParams[] = {"lfo_depth", "base_freq", "filter_freq", "delay_feedback", "reverb_mix"};
+    const char* bankAParams[] = {"lfo_depth", "base_freq", "none", "delay_feedback", "reverb_mix"};
     // Bank B parameters
-    const char* bankBParams[] = {"lfo_rate", "delay_time", "filter_res", "osc_waveform", "reverb_size"};
+    const char* bankBParams[] = {"lfo_rate", "delay_time", "none", "osc_waveform", "reverb_size"};
     
     const char* paramName = (bank == Bank::A) ? bankAParams[encoderIndex] : bankBParams[encoderIndex];
     
@@ -618,13 +616,6 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
         params.lfoDepth = clamp(params.lfoDepth + step, 0.0f, 1.0f);
         engine.setLfoDepth(params.lfoDepth);  // Filter modulation depth
         newValue = params.lfoDepth;
-    }
-    else if (strcmp(paramName, "filter_freq") == 0) {
-        // Logarithmic control for full range in ~1 rotation (24 steps)
-        float multiplier = (direction > 0) ? 1.32f : (1.0f / 1.32f);
-        params.filterFreq = clamp(params.filterFreq * multiplier, 20.0f, 20000.0f);
-        engine.setFilterCutoff(params.filterFreq);
-        newValue = params.filterFreq;
     }
     else if (strcmp(paramName, "base_freq") == 0) {
         // Logarithmic frequency control for full range in ~1 rotation (24 steps)
@@ -642,12 +633,6 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
         }
 
         newValue = params.baseFreq;
-    }
-    else if (strcmp(paramName, "filter_res") == 0) {
-        step = 0.04f * direction;
-        params.filterRes = clamp(params.filterRes + step, 0.0f, 0.95f);
-        engine.setFilterResonance(params.filterRes);
-        newValue = params.filterRes;
     }
     else if (strcmp(paramName, "delay_feedback") == 0) {
         step = 0.04f * direction;
@@ -1093,9 +1078,7 @@ void GPIOController::exitSecretMode() {
         params.volume = 0.6f;
         params.lfoDepth = 0.5f;      // LFO filter modulation depth
         params.lfoRate = 2.0f;       // 2 Hz - wee-woo every 0.5 seconds
-        params.filterFreq = 3000.0f; // Standard filter setting for siren
         params.baseFreq = 440.0f;    // A4 - standard siren pitch
-        params.filterRes = 0.5f;     // Standard resonance
         params.delayFeedback = 0.55f;// Spacey dub echoes
         params.delayTime = 0.375f;   // Dotted eighth - classic dub
         params.reverbMix = 0.4f;     // Wet for atmosphere
@@ -1109,9 +1092,7 @@ void GPIOController::exitSecretMode() {
         engine.setLfoPitchDepth(0.5f);              // Auto Wail pitch modulation (wee-woo)
         engine.setLfoRate(params.lfoRate);
         engine.setLfoWaveform(Waveform::Triangle);  // Smooth pitch transitions
-        engine.setFilterCutoff(params.filterFreq);
         engine.setFrequency(params.baseFreq);
-        engine.setFilterResonance(params.filterRes);
         engine.setDelayFeedback(params.delayFeedback);
         engine.setDelayTime(params.delayTime);
         engine.setReverbMix(params.reverbMix);
@@ -1137,7 +1118,7 @@ void GPIOController::applySecretModePreset() {
     SecretMode currentMode = secretMode.load();
     int preset = secretModePreset.load();  // Load once for consistent use throughout
     
-    // Preset parameters: baseFreq, filterFreq, filterRes, release, oscWaveform, delayTime, delayFeedback, reverbSize, reverbMix
+    // Preset parameters: baseFreq, release, oscWaveform, delayTime, delayFeedback, reverbSize, reverbMix
     
     if (currentMode == SecretMode::NJD) {
         // NJD Classic Dub Siren Presets
@@ -1147,8 +1128,6 @@ void GPIOController::applySecretModePreset() {
         switch (preset) {
             case 0: // Auto Wail - automatic pitch-alternating siren (wee-woo-wee-woo)
                 params.baseFreq = 440.0f;     // A4 - standard siren pitch
-                params.filterFreq = 3000.0f;  // Standard filter setting
-                params.filterRes = 0.5f;      // Standard resonance
                 params.release = 0.5f;        // Medium release
                 params.oscWaveform = 1;       // Square for classic siren sound
                 params.delayTime = 0.375f;    // Dotted eighth - classic dub
@@ -1163,8 +1142,6 @@ void GPIOController::applySecretModePreset() {
 
             case 1: // Classic NJD - the original dub siren sound
                 params.baseFreq = 587.0f;     // D5 - classic siren note
-                params.filterFreq = 3000.0f;
-                params.filterRes = 0.5f;      // Increased for more character
                 params.release = 0.8f;
                 params.oscWaveform = 1;       // Square for more edge
                 params.delayTime = 0.375f;    // Dotted eighth for reggae feel
@@ -1177,8 +1154,6 @@ void GPIOController::applySecretModePreset() {
 
             case 2: // Alert - emergency siren for rapid on/off triggering
                 params.baseFreq = 440.0f;     // A4 - mid-range wail
-                params.filterFreq = 2500.0f;
-                params.filterRes = 0.4f;
                 params.release = 0.3f;        // Short for clean toggling
                 params.oscWaveform = 1;       // Square for harsh siren sound
                 params.delayTime = 0.375f;    // Dotted eighth - classic dub
@@ -1191,8 +1166,6 @@ void GPIOController::applySecretModePreset() {
 
             case 3: // Bright - cutting through the mix
                 params.baseFreq = 880.0f;     // A5 - bright and piercing
-                params.filterFreq = 6000.0f;
-                params.filterRes = 0.3f;
                 params.release = 0.5f;
                 params.oscWaveform = 1;       // Square for edge
                 params.delayTime = 0.25f;
@@ -1205,8 +1178,6 @@ void GPIOController::applySecretModePreset() {
 
             case 4: // Wobble - with heavy resonance
                 params.baseFreq = 392.0f;     // G4
-                params.filterFreq = 1500.0f;
-                params.filterRes = 0.75f;     // Heavy resonance
                 params.release = 1.0f;
                 params.oscWaveform = 2;       // Sawtooth
                 params.delayTime = 0.333f;    // Triplet feel
@@ -1228,8 +1199,6 @@ void GPIOController::applySecretModePreset() {
         switch (preset) {
             case 0: // Laser Blast - Star Wars style pew pew
                 params.baseFreq = 1600.0f;    // Bright, sharp
-                params.filterFreq = 6000.0f;  // Very bright
-                params.filterRes = 0.3f;
                 params.release = 0.15f;       // Very short, snappy
                 params.oscWaveform = 1;       // Square for harsh edge
                 params.delayTime = 0.03f;     // Very short for texture
@@ -1240,8 +1209,6 @@ void GPIOController::applySecretModePreset() {
 
             case 1: // Flying Saucer - classic UFO whoosh
                 params.baseFreq = 1200.0f;    // High pitch
-                params.filterFreq = 4000.0f;
-                params.filterRes = 0.4f;
                 params.release = 2.0f;        // Long decay
                 params.oscWaveform = 0;       // Sine for clean tone
                 params.delayTime = 0.1f;      // Short slapback
@@ -1252,8 +1219,6 @@ void GPIOController::applySecretModePreset() {
 
             case 2: // Alien Signal - digital beeps
                 params.baseFreq = 1800.0f;    // Very high
-                params.filterFreq = 8000.0f;
-                params.filterRes = 0.6f;
                 params.release = 0.3f;        // Quick
                 params.oscWaveform = 1;       // Square for digital feel
                 params.delayTime = 0.05f;     // Very short
@@ -1264,8 +1229,6 @@ void GPIOController::applySecretModePreset() {
 
             case 3: // Warp Drive - deep space rumble
                 params.baseFreq = 80.0f;      // Sub bass
-                params.filterFreq = 2000.0f;
-                params.filterRes = 0.85f;     // Heavy resonance
                 params.release = 3.0f;        // Very long
                 params.oscWaveform = 2;       // Sawtooth for harmonics
                 params.delayTime = 0.75f;
@@ -1281,8 +1244,6 @@ void GPIOController::applySecretModePreset() {
     
     // Apply all parameters to engine (delay and reverb always active)
     engine.setFrequency(params.baseFreq);
-    engine.setFilterCutoff(params.filterFreq);
-    engine.setFilterResonance(params.filterRes);
     engine.setReleaseTime(params.release);
     engine.setWaveform(params.oscWaveform);
     engine.setDelayTime(params.delayTime);
@@ -1290,8 +1251,7 @@ void GPIOController::applySecretModePreset() {
     engine.setReverbSize(params.reverbSize);
     engine.setReverbMix(params.reverbMix);
     
-    std::cout << "  Base: " << params.baseFreq << "Hz, Filter: " << params.filterFreq 
-              << "Hz, Release: " << params.release << "s" << std::endl;
+    std::cout << "  Base: " << params.baseFreq << "Hz, Release: " << params.release << "s" << std::endl;
 }
 
 void GPIOController::updateLEDAudioLevel(float level) {

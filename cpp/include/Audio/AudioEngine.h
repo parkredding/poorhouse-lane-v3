@@ -83,10 +83,6 @@ public:
     void setLfoWaveform(Waveform wf);
     void setLfoWaveform(int index);
     
-    // Filter
-    void setFilterCutoff(float freq);
-    void setFilterResonance(float res);
-    
     // Delay
     void setDelayTime(float seconds);
     void setDelayFeedback(float feedback);
@@ -154,7 +150,6 @@ private:
     Oscillator oscillator;
     LFO lfo;
     Envelope envelope;
-    LowPassFilter filter;
     DCBlocker dcBlocker;
     DelayEffect delay;
     ReverbEffect reverb;

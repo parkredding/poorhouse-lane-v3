@@ -255,7 +255,6 @@ private:
 
         // Bank A (Auto Wail preset)
         float lfoDepth = 0.5f;     // LFO filter modulation depth (replaces volume encoder)
-        float filterFreq = 3000.0f;  // Standard filter setting for siren
         float baseFreq = 440.0f;  // A4 - standard siren pitch
         float delayFeedback = 0.55f;  // Spacey dub echoes
         float reverbMix = 0.4f;  // Wet for atmosphere
@@ -263,7 +262,6 @@ private:
         // Bank B (Auto Wail preset)
         float lfoRate = 2.0f;      // 2 Hz - wee-woo every 0.5 seconds
         float delayTime = 0.375f;  // Dotted eighth - classic dub
-        float filterRes = 0.5f;    // Standard resonance
         int oscWaveform = 1;  // Square for classic siren sound
         float reverbSize = 0.7f;   // Large dub space
         float release = 0.5f;      // Moved from encoder control
