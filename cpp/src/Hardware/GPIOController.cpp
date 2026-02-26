@@ -602,93 +602,113 @@ void GPIOController::stop() {
 void GPIOController::handleEncoder(int encoderIndex, int direction) {
     Bank bank = currentBank.load();
 
-    // Bank A parameters
-    const char* bankAParams[] = {"lfo_depth", "base_freq", "volume", "delay_feedback", "reverb_mix"};
-    // Bank B parameters
-    const char* bankBParams[] = {"lfo_rate", "delay_time", "release", "osc_waveform", "reverb_size"};
-    
-    const char* paramName = (bank == Bank::A) ? bankAParams[encoderIndex] : bankBParams[encoderIndex];
-    
-    // Update parameter based on type
+    static constexpr ParamId bankAParams[] = {
+        ParamId::LfoDepth, ParamId::BaseFreq, ParamId::Volume,
+        ParamId::DelayFeedback, ParamId::ReverbMix
+    };
+    static constexpr ParamId bankBParams[] = {
+        ParamId::LfoRate, ParamId::DelayTime, ParamId::Release,
+        ParamId::OscWaveform, ParamId::ReverbSize
+    };
+
+    ParamId paramId = (bank == Bank::A) ? bankAParams[encoderIndex] : bankBParams[encoderIndex];
+
     float step;
-    float newValue;
+    float newValue = 0.0f;
+    const char* paramName = "";
 
-    if (strcmp(paramName, "lfo_depth") == 0) {
-        step = 0.042f * direction;
-        params.lfoDepth = clamp(params.lfoDepth + step, 0.0f, 1.0f);
-        engine.setLfoDepth(params.lfoDepth);  // Filter modulation depth
-        newValue = params.lfoDepth;
-    }
-    else if (strcmp(paramName, "base_freq") == 0) {
-        // Logarithmic frequency control for full range in ~1 rotation (24 steps)
-        float multiplier = (direction > 0) ? 1.165f : (1.0f / 1.165f);
-        params.baseFreq = clamp(params.baseFreq * multiplier, 50.0f, 2000.0f);
-        engine.setFrequency(params.baseFreq);
+    switch (paramId) {
+        case ParamId::LfoDepth:
+            step = 0.042f * direction;
+            params.lfoDepth = clamp(params.lfoDepth + step, 0.0f, 1.0f);
+            engine.setLfoDepth(params.lfoDepth);
+            newValue = params.lfoDepth;
+            paramName = "lfo_depth";
+            break;
 
-        // Only modulate delay time inversely with pitch in PitchDelay secret mode
-        // (higher pitch = shorter delay - creates harmonic echo patterns common in dub sirens)
-        if (secretMode.load() == SecretMode::PitchDelay) {
-            float refFreq = 440.0f;
-            float scaledDelayTime = params.delayTime * (refFreq / params.baseFreq);
-            scaledDelayTime = clamp(scaledDelayTime, 0.01f, 2.0f);
-            engine.setDelayTime(scaledDelayTime);
+        case ParamId::BaseFreq: {
+            float multiplier = (direction > 0) ? 1.165f : (1.0f / 1.165f);
+            params.baseFreq = clamp(params.baseFreq * multiplier, 50.0f, 2000.0f);
+            engine.setFrequency(params.baseFreq);
+
+            if (secretMode.load() == SecretMode::PitchDelay) {
+                float refFreq = 440.0f;
+                float scaledDelayTime = params.delayTime * (refFreq / params.baseFreq);
+                scaledDelayTime = clamp(scaledDelayTime, 0.01f, 2.0f);
+                engine.setDelayTime(scaledDelayTime);
+            }
+
+            newValue = params.baseFreq;
+            paramName = "base_freq";
+            break;
         }
 
-        newValue = params.baseFreq;
+        case ParamId::Volume:
+            step = 0.042f * direction;
+            params.volume = clamp(params.volume + step, 0.0f, 1.0f);
+            engine.setVolume(params.volume);
+            newValue = params.volume;
+            paramName = "volume";
+            break;
+
+        case ParamId::Release: {
+            float multiplier = (direction > 0) ? 1.26f : (1.0f / 1.26f);
+            params.release = clamp(params.release * multiplier, 0.01f, 3.0f);
+            engine.setReleaseTime(params.release);
+            newValue = params.release;
+            paramName = "release";
+            break;
+        }
+
+        case ParamId::DelayFeedback:
+            step = 0.04f * direction;
+            params.delayFeedback = clamp(params.delayFeedback + step, 0.0f, 0.95f);
+            engine.setDelayFeedback(params.delayFeedback);
+            newValue = params.delayFeedback;
+            paramName = "delay_feedback";
+            break;
+
+        case ParamId::ReverbMix:
+            step = 0.042f * direction;
+            params.reverbMix = clamp(params.reverbMix + step, 0.0f, 1.0f);
+            engine.setReverbMix(params.reverbMix);
+            newValue = params.reverbMix;
+            paramName = "reverb_mix";
+            break;
+
+        case ParamId::LfoRate: {
+            float multiplier = (direction > 0) ? 1.15f : (1.0f / 1.15f);
+            params.lfoRate = clamp(params.lfoRate * multiplier, 0.1f, 20.0f);
+            engine.setLfoRate(params.lfoRate);
+            newValue = params.lfoRate;
+            paramName = "lfo_rate";
+            break;
+        }
+
+        case ParamId::DelayTime:
+            step = 0.083f * direction;
+            params.delayTime = clamp(params.delayTime + step, 0.001f, 2.0f);
+            engine.setDelayTime(params.delayTime);
+            newValue = params.delayTime;
+            paramName = "delay_time";
+            break;
+
+        case ParamId::ReverbSize:
+            step = 0.042f * direction;
+            params.reverbSize = clamp(params.reverbSize + step, 0.0f, 1.0f);
+            engine.setReverbSize(params.reverbSize);
+            newValue = params.reverbSize;
+            paramName = "reverb_size";
+            break;
+
+        case ParamId::OscWaveform:
+            params.oscWaveform = (params.oscWaveform + direction + 4) % 4;
+            engine.setWaveform(params.oscWaveform);
+            newValue = static_cast<float>(params.oscWaveform);
+            paramName = "osc_waveform";
+            break;
     }
-    else if (strcmp(paramName, "volume") == 0) {
-        step = 0.042f * direction;
-        params.volume = clamp(params.volume + step, 0.0f, 1.0f);
-        engine.setVolume(params.volume);
-        newValue = params.volume;
-    }
-    else if (strcmp(paramName, "release") == 0) {
-        // Logarithmic control for release time (0.01s to 3.0s)
-        float multiplier = (direction > 0) ? 1.26f : (1.0f / 1.26f);
-        params.release = clamp(params.release * multiplier, 0.01f, 3.0f);
-        engine.setReleaseTime(params.release);
-        newValue = params.release;
-    }
-    else if (strcmp(paramName, "delay_feedback") == 0) {
-        step = 0.04f * direction;
-        params.delayFeedback = clamp(params.delayFeedback + step, 0.0f, 0.95f);
-        engine.setDelayFeedback(params.delayFeedback);
-        newValue = params.delayFeedback;
-    }
-    else if (strcmp(paramName, "reverb_mix") == 0) {
-        step = 0.042f * direction;
-        params.reverbMix = clamp(params.reverbMix + step, 0.0f, 1.0f);
-        engine.setReverbMix(params.reverbMix);
-        newValue = params.reverbMix;
-    }
-    else if (strcmp(paramName, "lfo_rate") == 0) {
-        // Logarithmic control for LFO rate (0.1 Hz to 20 Hz)
-        float multiplier = (direction > 0) ? 1.15f : (1.0f / 1.15f);
-        params.lfoRate = clamp(params.lfoRate * multiplier, 0.1f, 20.0f);
-        engine.setLfoRate(params.lfoRate);
-        newValue = params.lfoRate;
-    }
-    else if (strcmp(paramName, "delay_time") == 0) {
-        step = 0.083f * direction;
-        params.delayTime = clamp(params.delayTime + step, 0.001f, 2.0f);
-        engine.setDelayTime(params.delayTime);
-        newValue = params.delayTime;
-    }
-    else if (strcmp(paramName, "reverb_size") == 0) {
-        step = 0.042f * direction;
-        params.reverbSize = clamp(params.reverbSize + step, 0.0f, 1.0f);
-        engine.setReverbSize(params.reverbSize);
-        newValue = params.reverbSize;
-    }
-    else if (strcmp(paramName, "osc_waveform") == 0) {
-        params.oscWaveform = (params.oscWaveform + direction + 4) % 4;
-        engine.setWaveform(params.oscWaveform);
-        newValue = static_cast<float>(params.oscWaveform);
-    }
-    else {
-        return;
-    }
-    
+
     const char* bankName = (bank == Bank::A) ? "A" : "B";
     std::cout << "[Bank " << bankName << "] " << paramName << ": " << newValue << std::endl;
 }
@@ -1150,7 +1170,9 @@ void GPIOController::applySecretModePreset() {
                 params.reverbSize = 0.7f;     // Large dub space
                 params.reverbMix = 0.4f;      // Wet for atmosphere
                 // Apply LFO pitch modulation for automatic wail
-                engine.setLfoRate(2.0f);      // 2 Hz - wee-woo every 0.5 seconds
+                params.lfoRate = 0.35f;       // Slow swell over ~3 seconds
+                params.lfoDepth = 0.5f;       // Pitch modulation depth
+                engine.setLfoRate(params.lfoRate);
                 engine.setLfoPitchDepth(0.5f); // ±0.5 octaves for noticeable pitch swing
                 engine.setLfoWaveform(Waveform::Triangle); // Smooth pitch transitions
                 break;
@@ -1163,7 +1185,7 @@ void GPIOController::applySecretModePreset() {
                 params.delayFeedback = 0.5f;  // Classic dub echoes
                 params.reverbSize = 0.65f;    // Deep dub space
                 params.reverbMix = 0.35f;
-                // Reset LFO pitch modulation (not used in this preset)
+                params.lfoDepth = 0.0f;
                 engine.setLfoPitchDepth(0.0f);
                 break;
 
@@ -1175,7 +1197,7 @@ void GPIOController::applySecretModePreset() {
                 params.delayFeedback = 0.55f; // Spacey dub echoes
                 params.reverbSize = 0.7f;     // Large dub space
                 params.reverbMix = 0.4f;      // Wet for atmosphere
-                // Reset LFO pitch modulation (not used in this preset)
+                params.lfoDepth = 0.0f;
                 engine.setLfoPitchDepth(0.0f);
                 break;
 
@@ -1187,7 +1209,7 @@ void GPIOController::applySecretModePreset() {
                 params.delayFeedback = 0.55f;
                 params.reverbSize = 0.4f;
                 params.reverbMix = 0.35f;
-                // Reset LFO pitch modulation (not used in this preset)
+                params.lfoDepth = 0.0f;
                 engine.setLfoPitchDepth(0.0f);
                 break;
 
@@ -1199,7 +1221,7 @@ void GPIOController::applySecretModePreset() {
                 params.delayFeedback = 0.6f;
                 params.reverbSize = 0.5f;
                 params.reverbMix = 0.4f;
-                // Reset LFO pitch modulation (not used in this preset)
+                params.lfoDepth = 0.0f;
                 engine.setLfoPitchDepth(0.0f);
                 break;
         }

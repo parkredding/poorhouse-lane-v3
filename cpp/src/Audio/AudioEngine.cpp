@@ -29,7 +29,7 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
     oscBuffer.resize(bufferSize);
     envBuffer.resize(bufferSize);
     lfoBuffer.resize(bufferSize);
-    filterBuffer.resize(bufferSize);
+    processBuffer.resize(bufferSize);
     delayBuffer.resize(bufferSize);
 
     // Set initial parameters (Auto Wail preset)
@@ -114,32 +114,32 @@ void AudioEngine::process(float* output, int numFrames) {
     }
 
     // Copy oscillator output to working buffer
-    std::copy(oscBuffer.begin(), oscBuffer.begin() + numFrames, filterBuffer.begin());
+    std::copy(oscBuffer.begin(), oscBuffer.begin() + numFrames, processBuffer.begin());
 
     // Apply envelope
     for (int i = 0; i < numFrames; ++i) {
         if (envBuffer[i] < 0.001f) {
-            filterBuffer[i] = 0.0f;
+            processBuffer[i] = 0.0f;
         } else {
-            filterBuffer[i] *= envBuffer[i];
+            processBuffer[i] *= envBuffer[i];
         }
     }
     
     // Apply delay
-    delay.process(filterBuffer.data(), delayBuffer.data(), numFrames);
-    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, filterBuffer.begin());
+    delay.process(processBuffer.data(), delayBuffer.data(), numFrames);
+    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, processBuffer.begin());
     
     // Apply reverb
-    reverb.process(filterBuffer.data(), delayBuffer.data(), numFrames);
-    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, filterBuffer.begin());
+    reverb.process(processBuffer.data(), delayBuffer.data(), numFrames);
+    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, processBuffer.begin());
     
     // Apply DC blocking
-    dcBlocker.process(filterBuffer.data(), filterBuffer.data(), numFrames);
+    dcBlocker.process(processBuffer.data(), processBuffer.data(), numFrames);
     
     // Apply volume and convert to stereo interleaved
     float vol = volume.get();
     for (int i = 0; i < numFrames; ++i) {
-        float sample = clamp(filterBuffer[i] * vol, -1.0f, 1.0f);
+        float sample = clamp(processBuffer[i] * vol, -1.0f, 1.0f);
         output[i * 2] = sample;      // Left
         output[i * 2 + 1] = sample;  // Right
     }

@@ -176,7 +176,7 @@ private:
     std::vector<float> oscBuffer;
     std::vector<float> envBuffer;
     std::vector<float> lfoBuffer;
-    std::vector<float> filterBuffer;
+    std::vector<float> processBuffer;
     std::vector<float> delayBuffer;
     
     // Mutex for trigger/release operations
