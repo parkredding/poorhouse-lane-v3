@@ -641,8 +641,9 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
         newValue = params.volume;
     }
     else if (strcmp(paramName, "release") == 0) {
-        step = 0.042f * direction;
-        params.release = clamp(params.release + step, 0.01f, 3.0f);
+        // Logarithmic control for release time (0.01s to 3.0s)
+        float multiplier = (direction > 0) ? 1.26f : (1.0f / 1.26f);
+        params.release = clamp(params.release * multiplier, 0.01f, 3.0f);
         engine.setReleaseTime(params.release);
         newValue = params.release;
     }
