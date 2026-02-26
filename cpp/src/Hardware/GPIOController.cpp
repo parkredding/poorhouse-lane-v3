@@ -224,7 +224,9 @@ void RotaryEncoder::update() {
     }
 #endif
     
-    if (clkState != lastClk) {
+    // Only trigger on falling edge (1→0) of CLK to get one step per detent.
+    // Each detent produces two CLK transitions; triggering on both double-counts.
+    if (clkState != lastClk && clkState == 0) {
         int direction;
         if (dtState != clkState) {
             position.fetch_add(1);
@@ -233,7 +235,7 @@ void RotaryEncoder::update() {
             position.fetch_sub(1);
             direction = -1;
         }
-        
+
         if (callback) {
             callback(direction);
         }
