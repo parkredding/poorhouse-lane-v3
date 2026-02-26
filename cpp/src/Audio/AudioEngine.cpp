@@ -133,9 +133,6 @@ void AudioEngine::process(float* output, int numFrames) {
     reverb.process(processBuffer.data(), delayBuffer.data(), numFrames);
     std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, processBuffer.begin());
     
-    // Apply DC blocking
-    dcBlocker.process(processBuffer.data(), processBuffer.data(), numFrames);
-    
     // Apply volume and convert to stereo interleaved
     float vol = volume.get();
     for (int i = 0; i < numFrames; ++i) {

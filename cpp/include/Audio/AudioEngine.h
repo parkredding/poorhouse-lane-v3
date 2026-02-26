@@ -4,7 +4,6 @@
 #include "DSP/Oscillator.h"
 #include "DSP/Envelope.h"
 #include "DSP/LFO.h"
-#include "DSP/Filter.h"
 #include "DSP/Delay.h"
 #include "DSP/Reverb.h"
 #include "Audio/AudioFilePlayer.h"
@@ -150,7 +149,6 @@ private:
     Oscillator oscillator;
     LFO lfo;
     Envelope envelope;
-    DCBlocker dcBlocker;
     DelayEffect delay;
     ReverbEffect reverb;
 
