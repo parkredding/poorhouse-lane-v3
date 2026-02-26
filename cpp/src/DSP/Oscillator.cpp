@@ -89,14 +89,14 @@ float Oscillator::generateSquarePolyBlep() {
     float value = (phase < 0.5f) ? 1.0f : -1.0f;
     
     // Apply PolyBLEP correction at the rising edge (phase = 0)
-    value += 2.0f * polyBlep(phase, dt);
-    
+    value += polyBlep(phase, dt);
+
     // Apply PolyBLEP correction at the falling edge (phase = 0.5)
     float phaseShifted = phase + 0.5f;
     if (phaseShifted >= 1.0f) {
         phaseShifted -= 1.0f;
     }
-    value -= 2.0f * polyBlep(phaseShifted, dt);
+    value -= polyBlep(phaseShifted, dt);
     
     return value;
 }
@@ -114,7 +114,7 @@ float Oscillator::generateSawPolyBlep() {
     float value = 2.0f * phase - 1.0f;
     
     // Apply PolyBLEP correction at the discontinuity (phase = 0)
-    value -= 2.0f * polyBlep(phase, dt);
+    value -= polyBlep(phase, dt);
     
     return value;
 }
