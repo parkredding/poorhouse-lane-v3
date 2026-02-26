@@ -540,7 +540,7 @@ void GPIOController::start() {
     
     // Apply initial parameters (Auto Wail preset)
     engine.setVolume(params.volume);
-    engine.setLfoDepth(params.lfoDepth);        // Filter modulation depth
+    engine.setLfoDepth(params.lfoDepth);        // LFO modulation depth
     engine.setLfoPitchDepth(0.5f);              // Auto Wail pitch modulation (wee-woo)
     engine.setLfoRate(params.lfoRate);
     engine.setLfoWaveform(Waveform::Triangle);  // Smooth pitch transitions
@@ -566,9 +566,9 @@ void GPIOController::start() {
     std::cout << "============================================================" << std::endl;
     std::cout << "  Control Surface Ready" << std::endl;
     std::cout << "============================================================" << std::endl;
-    std::cout << "\nBank A: LFO Depth, Base Freq, Filter Freq, Delay FB, Reverb Mix" << std::endl;
-    std::cout << "Bank B: LFO Rate, Delay Time, Filter Res, Osc Wave, Reverb Size" << std::endl;
-    std::cout << "\nMaster Volume: " << params.volume << " (fixed)" << std::endl;
+    std::cout << "\nBank A: LFO Depth, Base Freq, Volume, Delay FB, Reverb Mix" << std::endl;
+    std::cout << "Bank B: LFO Rate, Delay Time, Release, Osc Wave, Reverb Size" << std::endl;
+    std::cout << "\nMaster Volume: " << params.volume << std::endl;
     std::cout << "\nButtons: Trigger, Shift (Bank A/B), Shutdown, Waveform Cycle" << std::endl;
     std::cout << "Pitch Env Switch: UP=rise | OFF=none | DOWN=fall" << std::endl;
     if (ledController && ledController->isAvailable()) {
@@ -616,7 +616,7 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
     if (strcmp(paramName, "lfo_depth") == 0) {
         step = 0.042f * direction;
         params.lfoDepth = clamp(params.lfoDepth + step, 0.0f, 1.0f);
-        engine.setLfoDepth(params.lfoDepth);  // Filter modulation depth
+        engine.setLfoDepth(params.lfoDepth);  // LFO modulation depth
         newValue = params.lfoDepth;
     }
     else if (strcmp(paramName, "base_freq") == 0) {
@@ -1091,8 +1091,8 @@ void GPIOController::exitSecretMode() {
     if (currentMode == SecretMode::NJD || currentMode == SecretMode::UFO) {
         // Restore default parameters (Auto Wail preset)
         params.volume = 0.6f;
-        params.lfoDepth = 0.5f;      // LFO filter modulation depth
-        params.lfoRate = 2.0f;       // 2 Hz - wee-woo every 0.5 seconds
+        params.lfoDepth = 0.5f;      // LFO modulation depth
+        params.lfoRate = 0.35f;      // Slow swell - one full cycle ~2.9 seconds
         params.baseFreq = 440.0f;    // A4 - standard siren pitch
         params.delayFeedback = 0.55f;// Spacey dub echoes
         params.delayTime = 0.375f;   // Dotted eighth - classic dub
@@ -1103,7 +1103,7 @@ void GPIOController::exitSecretMode() {
 
         // Apply restored parameters (Auto Wail preset)
         engine.setVolume(params.volume);
-        engine.setLfoDepth(params.lfoDepth);        // Filter modulation depth
+        engine.setLfoDepth(params.lfoDepth);        // LFO modulation depth
         engine.setLfoPitchDepth(0.5f);              // Auto Wail pitch modulation (wee-woo)
         engine.setLfoRate(params.lfoRate);
         engine.setLfoWaveform(Waveform::Triangle);  // Smooth pitch transitions

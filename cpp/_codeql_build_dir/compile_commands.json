@@ -1,0 +1,74 @@
+[
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/Oscillator.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Oscillator.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Oscillator.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/Oscillator.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/Envelope.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Envelope.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Envelope.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/Envelope.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/Filter.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Filter.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Filter.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/Filter.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/Delay.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Delay.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Delay.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/Delay.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/Reverb.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Reverb.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/Reverb.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/Reverb.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/DSP/LFO.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/LFO.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/DSP/LFO.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/DSP/LFO.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/Audio/AudioEngine.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioEngine.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioEngine.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/Audio/AudioEngine.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/Audio/AudioOutput.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioOutput.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioOutput.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/Audio/AudioOutput.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/Audio/AudioFilePlayer.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioFilePlayer.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Audio/AudioFilePlayer.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/Audio/AudioFilePlayer.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/Hardware/GPIOController.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Hardware/GPIOController.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Hardware/GPIOController.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/Hardware/GPIOController.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/Hardware/LEDController.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Hardware/LEDController.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/Hardware/LEDController.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/Hardware/LEDController.cpp.o"
+},
+{
+  "directory": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/_codeql_build_dir",
+  "command": "/tmp/codeql-scratch-b7dd47df8c4102bb/dbs/cpp/working/autobuild/bin/c++  -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/include -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src -I/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/external  -Wall -Wextra -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/dubsiren.dir/src/main.cpp.o -c /home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/main.cpp",
+  "file": "/home/runner/work/poorhouse-lane-v3/poorhouse-lane-v3/cpp/src/main.cpp",
+  "output": "CMakeFiles/dubsiren.dir/src/main.cpp.o"
+}
+]

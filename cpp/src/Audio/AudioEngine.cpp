@@ -29,12 +29,12 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
     oscBuffer.resize(bufferSize);
     envBuffer.resize(bufferSize);
     lfoBuffer.resize(bufferSize);
-    filterBuffer.resize(bufferSize);
+    workBuffer.resize(bufferSize);
     delayBuffer.resize(bufferSize);
 
     // Set initial parameters (Auto Wail preset)
     oscillator.setWaveform(Waveform::Square);  // Square for classic siren sound
-    lfo.setFrequency(0.35f);     // Slow swell - rises and falls over ~3 seconds
+    lfo.setFrequency(0.35f);     // Slow swell - one full cycle ~2.9 seconds
     lfo.setDepth(0.5f);          // Filter modulation depth (controllable by encoder)
     lfo.setWaveform(Waveform::Triangle);  // Smooth pitch transitions
     envelope.setAttack(0.01f);
@@ -114,32 +114,32 @@ void AudioEngine::process(float* output, int numFrames) {
     }
 
     // Copy oscillator output to working buffer
-    std::copy(oscBuffer.begin(), oscBuffer.begin() + numFrames, filterBuffer.begin());
+    std::copy(oscBuffer.begin(), oscBuffer.begin() + numFrames, workBuffer.begin());
 
     // Apply envelope
     for (int i = 0; i < numFrames; ++i) {
         if (envBuffer[i] < 0.001f) {
-            filterBuffer[i] = 0.0f;
+            workBuffer[i] = 0.0f;
         } else {
-            filterBuffer[i] *= envBuffer[i];
+            workBuffer[i] *= envBuffer[i];
         }
     }
     
     // Apply delay
-    delay.process(filterBuffer.data(), delayBuffer.data(), numFrames);
-    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, filterBuffer.begin());
+    delay.process(workBuffer.data(), delayBuffer.data(), numFrames);
+    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, workBuffer.begin());
     
     // Apply reverb
-    reverb.process(filterBuffer.data(), delayBuffer.data(), numFrames);
-    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, filterBuffer.begin());
+    reverb.process(workBuffer.data(), delayBuffer.data(), numFrames);
+    std::copy(delayBuffer.begin(), delayBuffer.begin() + numFrames, workBuffer.begin());
     
     // Apply DC blocking
-    dcBlocker.process(filterBuffer.data(), filterBuffer.data(), numFrames);
+    dcBlocker.process(workBuffer.data(), workBuffer.data(), numFrames);
     
     // Apply volume and convert to stereo interleaved
     float vol = volume.get();
     for (int i = 0; i < numFrames; ++i) {
-        float sample = clamp(filterBuffer[i] * vol, -1.0f, 1.0f);
+        float sample = clamp(workBuffer[i] * vol, -1.0f, 1.0f);
         output[i * 2] = sample;      // Left
         output[i * 2 + 1] = sample;  // Right
     }
