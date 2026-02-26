@@ -34,7 +34,7 @@ AudioEngine::AudioEngine(int sampleRate, int bufferSize)
 
     // Set initial parameters (Auto Wail preset)
     oscillator.setWaveform(Waveform::Square);  // Square for classic siren sound
-    lfo.setFrequency(2.0f);      // 2 Hz - wee-woo every 0.5 seconds
+    lfo.setFrequency(0.35f);     // Slow swell - rises and falls over ~3 seconds
     lfo.setDepth(0.5f);          // Filter modulation depth (controllable by encoder)
     lfo.setWaveform(Waveform::Triangle);  // Smooth pitch transitions
     envelope.setAttack(0.01f);
