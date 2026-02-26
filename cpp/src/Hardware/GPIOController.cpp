@@ -601,9 +601,9 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
     Bank bank = currentBank.load();
 
     // Bank A parameters
-    const char* bankAParams[] = {"lfo_depth", "base_freq", "none", "delay_feedback", "reverb_mix"};
+    const char* bankAParams[] = {"lfo_depth", "base_freq", "volume", "delay_feedback", "reverb_mix"};
     // Bank B parameters
-    const char* bankBParams[] = {"lfo_rate", "delay_time", "none", "osc_waveform", "reverb_size"};
+    const char* bankBParams[] = {"lfo_rate", "delay_time", "release", "osc_waveform", "reverb_size"};
     
     const char* paramName = (bank == Bank::A) ? bankAParams[encoderIndex] : bankBParams[encoderIndex];
     
@@ -633,6 +633,18 @@ void GPIOController::handleEncoder(int encoderIndex, int direction) {
         }
 
         newValue = params.baseFreq;
+    }
+    else if (strcmp(paramName, "volume") == 0) {
+        step = 0.042f * direction;
+        params.volume = clamp(params.volume + step, 0.0f, 1.0f);
+        engine.setVolume(params.volume);
+        newValue = params.volume;
+    }
+    else if (strcmp(paramName, "release") == 0) {
+        step = 0.042f * direction;
+        params.release = clamp(params.release + step, 0.01f, 3.0f);
+        engine.setReleaseTime(params.release);
+        newValue = params.release;
     }
     else if (strcmp(paramName, "delay_feedback") == 0) {
         step = 0.04f * direction;
