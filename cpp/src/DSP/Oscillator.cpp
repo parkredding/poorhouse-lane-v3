@@ -19,7 +19,11 @@ void Oscillator::generate(float* output, int numSamples) {
 
 float Oscillator::generateSample() {
     float sample = 0.0f;
-    
+
+    // RMS-normalization gain: boost Saw and Triangle to match Sine's RMS (~0.707).
+    // Saw/Triangle raw RMS = 1/√3 ≈ 0.577; gain = 0.707 / 0.577 ≈ 1.22.
+    static constexpr float SAW_TRI_GAIN = 1.22f;
+
     switch (waveform) {
         case Waveform::Sine:
             sample = generateSine();
@@ -28,10 +32,10 @@ float Oscillator::generateSample() {
             sample = generateSquarePolyBlep();
             break;
         case Waveform::Saw:
-            sample = generateSawPolyBlep();
+            sample = generateSawPolyBlep() * SAW_TRI_GAIN;
             break;
         case Waveform::Triangle:
-            sample = generateTriangle();
+            sample = generateTriangle() * SAW_TRI_GAIN;
             break;
     }
     
